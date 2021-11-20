@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1036282663531",
+    "firebase_url": "https://grizconnect-default-rtdb.firebaseio.com",
+    "project_id": "grizconnect",
+    "storage_bucket": "grizconnect.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1036282663531:android:01aec53d2dae6b4fa0972e",
+        "android_client_info": {
+          "package_name": "com.example.grizz_connect"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1036282663531-2kb1r7fbohi62lb7svj69j6jngpiic9s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCO7nYAVoxJyL65hbW6Ba8fECwhLCQM7XY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1036282663531-2kb1r7fbohi62lb7svj69j6jngpiic9s.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
