@@ -1,6 +1,6 @@
 # CSI4999: Grizz Connect 
 
-Contains: Registration, login, marketplace, and upload pages.
+Contains: Registration, login, marketplace, upload, and firebase connections.
 
 Please attach pages and dependencies for itempage, health form, profile, and anything else thats missing. 
 
