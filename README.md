@@ -1,6 +1,6 @@
 # CSI4999: Grizz Connect 
 
-Contains Registeration, login, marketplace, and upload pages.
+Contains Registration, login, marketplace, and upload pages.
 
 ## Getting Started
 
