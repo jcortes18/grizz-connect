@@ -22,32 +22,14 @@ class _MarketplaceState extends State<MarketplaceTab> {
     Navigator.of(context).push(MaterialPageRoute(
         builder: (BuildContext context) => _pageOptions[selectedPage]));
   }
+  // pages options for bottom navigation bar
   final _pageOptions = [
-    UploadItem(),
-    Testing(), // update to covid health form page
-    //settings() //add settings page
+    //otherPage(),
+    Testing(),
+    //otherPage()
   ];
 
-  // Future getItems() async {
-  //
-  //   // var fs = FirebaseFirestore.instance;
-  //   // QuerySnapshot docs = await fs.collection("Items").get();
-  //   // return docs.docs;
-  //   QuerySnapshot response = await FirebaseFirestore.instance.collection("Items").get();
-  //   return response.docs;
-  // }
-
-  // void _itemView() async {
-  //   final fsInstance = FirebaseFirestore.instance;
-  //   var result = await fsInstance.collection("Items").snapshots().listen((result) {
-  //     result.docs.forEach((res) {
-  //       print(res.data());
-  //     });
-  //   });
-  // }
-
   final Stream<QuerySnapshot> items = FirebaseFirestore.instance.collection("Items").snapshots();
-
 
   @override
   Widget build(BuildContext context) {
@@ -58,144 +40,161 @@ class _MarketplaceState extends State<MarketplaceTab> {
     return Scaffold(
       body: Stack(fit: StackFit.expand, children: [
         buildFloatingSearchBar(),
-        Container(
-            padding: const EdgeInsets.only(top: 140),
-            child: Column(
+        SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+            physics: AlwaysScrollableScrollPhysics(),
+            padding: const EdgeInsets.only(top: 140, right:20, left: 20),
+            child: //<Widget>[
+              Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
-              // Major Category text row
-              Row(mainAxisSize: MainAxisSize.min, children: const [
-                SizedBox(
-                  child: Text('Major Categories',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontFamily: 'Roboto',
-                        fontSize: 25,
-                      )),
-                )
-              ]),
-              // Filter button horizontal row
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: [
-                    Column(children: [
-                      TextButton(
-                          onPressed: () {},
-                          child: const Icon(
-                            Icons.book,
-                            color: Colors.amber,
-                            size: 100,
-                          )),
-                      const Text('Books')
+
+                // Major Category text row
+                Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: const [
+                      SizedBox(
+                        child: Text('Major Categories',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontFamily: 'Roboto',
+                              fontSize: 25,
+                            )),
+                      )
                     ]),
-                    Column(children: [
-                      TextButton(
-                          onPressed: () {},
-                          child: const Icon(
-                            Icons.chair,
-                            color: Colors.amber,
-                            size: 100,
-                          )),
-                      const Text('Furniture')
-                    ]),
-                    Column(children: [
-                      TextButton(
-                          onPressed: () {},
-                          child: const Icon(
-                            Icons.computer,
-                            color: Colors.amber,
-                            size: 100,
-                          )),
-                      const Text('Electronics')
-                    ]),
-                    Column(children: [
-                      TextButton(
-                          onPressed: () {},
-                          child: const Icon(
-                            Icons.science_sharp,
-                            color: Colors.amber,
-                            size: 100,
-                          )),
-                      const Text('Lab Kits')
-                    ]),
-                    Column(children: [
-                      TextButton(
-                          onPressed: () {},
-                          child: const Icon(
-                            Icons.backpack,
-                            color: Colors.amber,
-                            size: 100,
-                          )),
-                      const Text('Supplies')
-                    ]),
-                    Column(children: [
-                      TextButton(
-                          onPressed: () {},
-                          child: const Icon(
-                            Icons.favorite,
-                            color: Colors.amber,
-                            size: 100,
-                          )),
-                      const Text('Favorites')
-                    ]),
-                  ],
+
+                // Filter button horizontal row
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
+                      Column(children: [
+                        TextButton(
+                            onPressed: () {},
+                            child: const Icon(
+                              Icons.book,
+                              color: Colors.amber,
+                              size: 100,
+                            )),
+                        const Text('Books')
+                      ]),
+                      Column(children: [
+                        TextButton(
+                            onPressed: () {},
+                            child: const Icon(
+                              Icons.chair,
+                              color: Colors.amber,
+                              size: 100,
+                            )),
+                        const Text('Furniture')
+                      ]),
+                      Column(children: [
+                        TextButton(
+                            onPressed: () {},
+                            child: const Icon(
+                              Icons.computer,
+                              color: Colors.amber,
+                              size: 100,
+                            )),
+                        const Text('Electronics')
+                      ]),
+                      Column(children: [
+                        TextButton(
+                            onPressed: () {},
+                            child: const Icon(
+                              Icons.science_sharp,
+                              color: Colors.amber,
+                              size: 100,
+                            )),
+                        const Text('Lab Kits')
+                      ]),
+                      Column(children: [
+                        TextButton(
+                            onPressed: () {},
+                            child: const Icon(
+                              Icons.backpack,
+                              color: Colors.amber,
+                              size: 100,
+                            )),
+                        const Text('Supplies')
+                      ]),
+                      Column(children: [
+                        TextButton(
+                            onPressed: () {},
+                            child: const Icon(
+                              Icons.favorite,
+                              color: Colors.amber,
+                              size: 100,
+                            )),
+                        const Text('Favorites')
+                      ]),
+                    ],
+                  ),
                 ),
-              ),
-              // Item cards column
-              Flexible(
-                //padding: const EdgeInsets.all(20.0),
-                child: StreamBuilder<QuerySnapshot>(
-                  stream: items,
-                  builder: (
-                      BuildContext context,
-                      AsyncSnapshot<QuerySnapshot> snapshot,
-                      ){
-                          if(snapshot.hasError){
-                            return Text("Something went wrong");
-                          }
-                          if(snapshot.connectionState == ConnectionState.waiting){
-                            return Text("Loading...");
-                          }
 
-                          final data = snapshot.requireData;
-                          
-                          return ListView.builder(
-                              scrollDirection: Axis.vertical,
-                              shrinkWrap: true,
-                              itemCount: data.size,
-                              itemBuilder: (context, index){
-                                // return Text('Name: ${data.docs[index]['ItemName']}, Price: ${data.docs[index]['Price']}');
-                                return Card(
-                                  elevation: 4.0,
-                                  child: Column(
-                                    children: <Widget>[
-                                      ListTile(
-                                        title: Text(data.docs[index]['ItemName']),
-                                        subtitle: Text(data.docs[index]['Price'].toString()),
-                                      ),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.end,
-                                        children: <Widget>[
-                                          TextButton(
-                                            child: const Text('BUY'),
-                                            onPressed: () {/* ... */},
-                                          ),
-                                          const SizedBox(width: 8),
+                // Item cards column
+                //SizedBox(
+                  //padding: const EdgeInsets.all(20.0),
+                  //height: 500,
+                  //child:
+                  Flexible(
+                    child: StreamBuilder<QuerySnapshot> (
+                    stream: items,
+                    builder: (
+                        BuildContext context,
+                        AsyncSnapshot<QuerySnapshot> snapshot,
+                        ){
+                            if(snapshot.hasError){
+                              return Text("Something went wrong");
+                            }
+                            if(snapshot.connectionState == ConnectionState.waiting){
+                              return Text("Loading...");
+                            }
 
-                                        ],
-                                      ),
-                                    ],
-                                  )
+                            final data = snapshot.requireData;
 
-                                  ,
-                                );
-                              },
-                          );
-                       },
+                            return ListView.builder(
+                                //scrollDirection: Axis.vertical,
+                                //physics: ScrollPhysics(),
+                                physics: NeverScrollableScrollPhysics(),
+                                shrinkWrap: true,
+                                itemCount: data.size,
+                                itemBuilder: (context, index){
+                                  // return Text('Name: ${data.docs[index]['ItemName']}, Price: ${data.docs[index]['Price']}');
+                                  return Card(
+                                    elevation: 4.0,
+                                    child: Column(
+                                      children: <Widget>[
+                                        ListTile(
+                                          title: Text(data.docs[index]['ItemName']),
+                                          subtitle: Text(data.docs[index]['Price'].toString()),
+                                        ),
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.end,
+                                          children: <Widget>[
+                                            TextButton(
+                                              child: const Text('BUY'),
+                                              onPressed: () {/* ... */},
+                                            ),
+                                            const SizedBox(width: 8),
+
+                                          ],
+                                        ),
+                                      ],
+                                    )
+
+                                    ,
+                                  );
+                                },
+                            );
+                         },
+                  ),
                 ),
-              ),
-            ] // Column Children
-                )),
+
+              ] // Column Children
+                  ),
+        //]
+        ),
       ]),
       // Floating '+' button
       floatingActionButton: FloatingActionButton(
@@ -207,7 +206,9 @@ class _MarketplaceState extends State<MarketplaceTab> {
         backgroundColor: Colors.amber,
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+
       // Bottom Navigation Bar
+      extendBody: true, //show body behind nav bar
       bottomNavigationBar: Padding(
           padding: const EdgeInsets.only(top: 0, bottom: 10),
           child: DotNavigationBar(
@@ -294,171 +295,3 @@ class _MarketplaceState extends State<MarketplaceTab> {
   }
 }
 
-
-// FutureBuilder<QuerySnapshot>(
-// // <2> Pass `Stream<QuerySnapshot>` to stream
-// future: firestoreItems,
-// builder: (BuildContext context, snapshot) {
-// if (snapshot.hasData) {
-// // <3> Retrieve `List<DocumentSnapshot>` from snapshot
-// final List<DocumentSnapshot> documents = snapshot.data!.docs;
-// return ListView(
-// shrinkWrap: true,
-// children: documents.map((doc) => Card(
-// child: ListTile(
-// title: Text(doc['itemName']),
-// subtitle: Text(doc['Price']),
-// ),
-// ))
-//     .toList());
-// } else {
-// return const Text('Its Error!');
-// }
-// }),
-
-
-// Card buildCard(heading, price, image, date, context) {
-//   var supportingText =
-//       'Beautiful home to rent, recently refurbished with modern appliances...';
-//   return Card(
-//       elevation: 4.0,
-//       child: Column(
-//         children: [
-//           ListTile(
-//             title: Text(heading),
-//             subtitle: Text(date),
-//             trailing: Icon(Icons.favorite_outline),
-//           ),
-//           Container(
-//             height: 200.0,
-//             child: Ink.image(
-//               image: image,
-//               fit: BoxFit.cover,
-//             ),
-//           ),
-//           Container(
-//             padding: EdgeInsets.all(16.0),
-//             alignment: Alignment.centerLeft,
-//             child: Text(price),
-//           ),
-//           InkWell(
-//             onTap: () {},
-//             splashColor: Theme.of(context).colorScheme.onSurface.withOpacity(0.12),
-//             highlightColor: Colors.transparent,
-//           )
-//           // ButtonBar(
-//           //   children: [
-//           //     TextButton(
-//           //       child: const Text('CONTACT AGENT'),
-//           //       onPressed: () {/* ... */},
-//           //     ),
-//           //     TextButton(
-//           //       child: const Text('LEARN MORE'),
-//           //       onPressed: () {/* ... */},
-//           //     )
-//           //   ],
-//           // )
-//         ],
-//       ));
-// }
-
-// Container(
-//     height: 300,
-//     child:
-//     ListView(
-//       //scrollDirection: Axis.vertical,
-//       children: [
-//         Column(
-//           children: [
-//             Expanded(child:
-//             Card(
-//               elevation: 4.0,
-//               child: Column(
-//                 children: [
-//                   const ListTile(
-//                     title: Text('Computer for sale'),
-//                     subtitle: Text('Nov 4, 2021'),
-//                     trailing: Icon(Icons.favorite_outline),
-//                   ),
-//                   Container(
-//                     height: 200.0,
-//                     child: Ink.image(
-//                       image: image1,
-//                       fit: BoxFit.cover,
-//                     ),
-//                   ),
-//                   Container(
-//                     padding: EdgeInsets.all(16.0),
-//                     alignment: Alignment.centerLeft,
-//                     child: Text('\$2300.00'),
-//                   ),
-//                   InkWell(
-//                     onTap: () {},
-//                     splashColor: Theme.of(context).colorScheme.onSurface.withOpacity(0.12),
-//                     highlightColor: Colors.transparent,
-//                   )
-//                 ],
-//               )
-//           )),
-//             Expanded(child:
-//               Card(
-//                 elevation: 4.0,
-//                 child: Column(
-//                   children: [
-//                     const ListTile(
-//                       title: Text('College Physics Textbook'),
-//                       subtitle: Text('Nov 1, 2021'),
-//                       trailing: Icon(Icons.favorite_outline),
-//                     ),
-//                     Container(
-//                       height: 200.0,
-//                       child: Ink.image(
-//                         image: image2,
-//                         fit: BoxFit.cover,
-//                       ),
-//                     ),
-//                     Container(
-//                       padding: EdgeInsets.all(16.0),
-//                       alignment: Alignment.centerLeft,
-//                       child: const Text('\$50.00'),
-//                     ),
-//                     InkWell(
-//                       onTap: () {},
-//                       splashColor: Theme.of(context).colorScheme.onSurface.withOpacity(0.12),
-//                       highlightColor: Colors.transparent,
-//                     )
-//                   ],
-//                 )
-//             )),
-//             Expanded(child:
-//               Card(
-//                 elevation: 4.0,
-//                 child: Column(
-//                   children: [
-//                     const ListTile(
-//                       title: Text('Nike Air Backpack'),
-//                       subtitle: Text('Oct 30, 2021'),
-//                       trailing: Icon(Icons.favorite_outline),
-//                     ),
-//                     Container(
-//                       height: 200.0,
-//                       child: Ink.image(
-//                         image: image3,
-//                         fit: BoxFit.cover,
-//                       ),
-//                     ),
-//                     Container(
-//                       padding: EdgeInsets.all(16.0),
-//                       alignment: Alignment.centerLeft,
-//                       child: const Text('\$20.00'),
-//                     ),
-//                     InkWell(
-//                       onTap: () {},
-//                       splashColor: Theme.of(context).colorScheme.onSurface.withOpacity(0.12),
-//                       highlightColor: Colors.transparent,
-//                     )
-//                   ],
-//                 )
-//               ))
-//             ],
-//     )]))
