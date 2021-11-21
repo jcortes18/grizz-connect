@@ -60,7 +60,8 @@ class _MarketplaceState extends State<MarketplaceTab> {
         buildFloatingSearchBar(),
         Container(
             padding: const EdgeInsets.only(top: 140),
-            child: Column(children: [
+            child: Column(
+                children: [
               // Major Category text row
               Row(mainAxisSize: MainAxisSize.min, children: const [
                 SizedBox(
@@ -141,8 +142,8 @@ class _MarketplaceState extends State<MarketplaceTab> {
                 ),
               ),
               // Item cards column
-              Container(
-                padding: const EdgeInsets.all(20.0),
+              Flexible(
+                //padding: const EdgeInsets.all(20.0),
                 child: StreamBuilder<QuerySnapshot>(
                   stream: items,
                   builder: (
@@ -163,7 +164,31 @@ class _MarketplaceState extends State<MarketplaceTab> {
                               shrinkWrap: true,
                               itemCount: data.size,
                               itemBuilder: (context, index){
-                                return Text('Name: ${data.docs[index]['ItemName']}, Price: ${data.docs[index]['Price']}');
+                                // return Text('Name: ${data.docs[index]['ItemName']}, Price: ${data.docs[index]['Price']}');
+                                return Card(
+                                  elevation: 4.0,
+                                  child: Column(
+                                    children: <Widget>[
+                                      ListTile(
+                                        title: Text(data.docs[index]['ItemName']),
+                                        subtitle: Text(data.docs[index]['Price'].toString()),
+                                      ),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.end,
+                                        children: <Widget>[
+                                          TextButton(
+                                            child: const Text('BUY'),
+                                            onPressed: () {/* ... */},
+                                          ),
+                                          const SizedBox(width: 8),
+
+                                        ],
+                                      ),
+                                    ],
+                                  )
+
+                                  ,
+                                );
                               },
                           );
                        },
