@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:grizz_connect/main.dart';
+import 'package:grizz_connect/marketplace_main.dart';
 
 
 class UploadItem extends StatefulWidget {
@@ -17,9 +18,17 @@ class _UploadPageState extends State<UploadItem>{
   final TextEditingController _priceController = new TextEditingController();
   final TextEditingController _descriptionController = new TextEditingController();
 
-  String itemName = '', description = '', dropdownValue = '', error = '';
-  double price = 0;
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is disposed.
+    _itemNameController.dispose();
+    _priceController.dispose();
+    _descriptionController.dispose();
+    super.dispose();
+  }
 
+  String dropdownValue = '', error = '';
+  int count = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -32,9 +41,9 @@ class _UploadPageState extends State<UploadItem>{
     Future<void> addItems() async {
 
       return items.add({
-        'ItemName': itemName,
-        'Description': description,
-        'Price': price})
+        'ItemName': _itemNameController.text,
+        'Description': _descriptionController.text,
+        'Price': _priceController.text})
           .then((value) => print("Item Added"))
           .catchError((error) => print("Failed to add: $error"));
 
@@ -65,17 +74,17 @@ class _UploadPageState extends State<UploadItem>{
                     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
                     child: TextFormField(
                       controller: _itemNameController,
-                      onChanged: (value){
-                        setState(() {
-                          itemName = value;
-                        });
-                      },
-                      validator: (String? value) {
-                        if (value!.isEmpty) {
-                          return null;
-                        }
-                        return 'Please make inputs';
-                      },
+                      // onChanged: (value){
+                      //   setState(() {
+                      //     itemName = value;
+                      //   });
+                      // },
+                      // validator: (String? value) {
+                      //   if (value!.isEmpty) {
+                      //     return null;
+                      //   }
+                      //   return 'Please make inputs';
+                      // },
                       decoration: const InputDecoration(
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.amber),
@@ -90,11 +99,12 @@ class _UploadPageState extends State<UploadItem>{
                     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
                     child: TextFormField(
                       controller: _priceController,
-                      onChanged: (value){
-                        setState(() {
-                          price = value as double;
-                        });
-                      },
+                      // onChanged: (value){
+                      //   setState(() {
+                      //      //price = value as double;
+                      //      //_priceController.text = value;
+                      //   });
+                      // },
                       decoration: const InputDecoration(
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.amber),
@@ -108,11 +118,11 @@ class _UploadPageState extends State<UploadItem>{
                     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
                     child: TextFormField(
                       controller: _descriptionController,
-                      onChanged: (value){
-                        setState(() {
-                          description = value;
-                        });
-                      },
+                      // onChanged: (value){
+                      //   setState(() {
+                      //     description = value;
+                      //   });
+                      // },
                       decoration: const InputDecoration(
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.amber),
@@ -184,22 +194,25 @@ class _UploadPageState extends State<UploadItem>{
                         ),
                         onPressed: () {
 
-                          if (itemName.isEmpty || description.isEmpty || price.isNaN || dropdownValue.isEmpty) {
+                          if (_itemNameController.text.isEmpty || _descriptionController.text.isEmpty || _priceController.text.isEmpty || dropdownValue.isEmpty) {
                             setState(() => error = ' All fields required ');
 
-                            // builder: (BuildContext context) => AlertDialog(
-                            //   title: const Text('Error'),
-                            //   content: const Text('All fields required!'),
-                            //   actions: <Widget>[
-                            //     TextButton(
-                            //       onPressed: () => Navigator.pop(context, 'OK'),
-                            //       child: const Text('OK'),
-                            //     ),
-                            //   ],
-                            // );
                           }
                           else{
                             addItems();
+                            showDialog<String>(
+                              context: context,
+                              builder: (BuildContext context) => AlertDialog(
+                                title: const Text('Item Added!'),
+                                actions: <Widget>[
+                                  TextButton(
+                                    onPressed: () => Navigator.of(context).popUntil((_) => count++ >= 2),
+                                    child: const Text('OK'),
+                                  ),
+                                ],
+                            ),
+                                );
+
                           }
                         },
                         child: const Text('Enter'),
