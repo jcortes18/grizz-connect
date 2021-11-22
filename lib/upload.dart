@@ -45,7 +45,8 @@ class _UploadPageState extends State<UploadItem>{
         'ItemName': _itemNameController.text,
         'Description': _descriptionController.text,
         'Price': _priceController.text,
-        'Category': _categoryController.text})
+        'Category': _categoryController.text,
+        'User': userid})
           .then((value) => print("Item Added"))
           .catchError((error) => print("Failed to add: $error"));
 
