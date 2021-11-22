@@ -36,7 +36,7 @@ class _MarketplaceState extends State<MarketplaceTab> {
 
     return Scaffold(
       body: Stack(fit: StackFit.expand, children: [
-        buildFloatingSearchBar(),
+        //buildFloatingSearchBar(),
         SingleChildScrollView(
             scrollDirection: Axis.vertical,
             physics: AlwaysScrollableScrollPhysics(),
@@ -188,6 +188,7 @@ class _MarketplaceState extends State<MarketplaceTab> {
                   ),
         //]
         ),
+        buildFloatingSearchBar(),
       ]),
 
       // Floating '+' button
@@ -198,11 +199,12 @@ class _MarketplaceState extends State<MarketplaceTab> {
         },
         child: const Icon(Icons.add),
         backgroundColor: Colors.amber,
+        elevation: 10.0,
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
 
       // Bottom Navigation Bar
-      extendBody: true, //show body behind nav bar
+      //extendBody: true, //show body behind nav bar
       // bottomNavigationBar: Padding(
       //     padding: const EdgeInsets.only(top: 0, bottom: 10),
       //     child: DotNavigationBar(
@@ -261,7 +263,8 @@ class _MarketplaceState extends State<MarketplaceTab> {
           showIfOpened: false,
           child: CircularButton(
             icon: const Icon(Icons.account_circle),
-            onPressed: () {}, //go to profile when clicked
+
+            onPressed: () { /* ..Go to profile page.. */ },
           ),
         ),
         FloatingSearchBarAction.searchToClear(
@@ -279,7 +282,7 @@ class _MarketplaceState extends State<MarketplaceTab> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: Colors.accents.map((color) {
-                return Container(height: 112, color: color);
+                return Container(height: 50, color: color);
               }).toList(),
             ),
           ),

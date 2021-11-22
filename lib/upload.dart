@@ -17,6 +17,7 @@ class _UploadPageState extends State<UploadItem>{
   final TextEditingController _itemNameController = new TextEditingController();
   final TextEditingController _priceController = new TextEditingController();
   final TextEditingController _descriptionController = new TextEditingController();
+  final TextEditingController _categoryController = new TextEditingController();
 
   @override
   void dispose() {
@@ -43,7 +44,9 @@ class _UploadPageState extends State<UploadItem>{
       return items.add({
         'ItemName': _itemNameController.text,
         'Description': _descriptionController.text,
-        'Price': _priceController.text})
+        'Price': _priceController.text,
+        'Category': _categoryController.text,
+        'User': userid})
           .then((value) => print("Item Added"))
           .catchError((error) => print("Failed to add: $error"));
 
@@ -78,12 +81,6 @@ class _UploadPageState extends State<UploadItem>{
                       //   setState(() {
                       //     itemName = value;
                       //   });
-                      // },
-                      // validator: (String? value) {
-                      //   if (value!.isEmpty) {
-                      //     return null;
-                      //   }
-                      //   return 'Please make inputs';
                       // },
                       decoration: const InputDecoration(
                         enabledBorder: OutlineInputBorder(
@@ -199,6 +196,7 @@ class _UploadPageState extends State<UploadItem>{
 
                           }
                           else{
+                            _categoryController.text = dropdownValue;
                             addItems();
                             showDialog<String>(
                               context: context,
