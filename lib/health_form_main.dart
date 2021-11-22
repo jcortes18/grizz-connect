@@ -22,7 +22,7 @@ class formHomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.teal,
+        backgroundColor: Colors.amber,
         title: Text(
           'Health Questionnaire',
           style: TextStyle(
@@ -83,16 +83,44 @@ class formHomePage extends StatelessWidget {
 
                 )
               ),
+              RichText(
+                  textAlign: TextAlign.center,
+                  text: TextSpan(
+                      children: [
+                        TextSpan(
+                            style : TextStyle(
+                              fontSize: 30.0,
+                              color:Colors.black,
+
+                            ),
+                            text:"To find test sites local to you"),
+                        TextSpan(
+                            style : TextStyle(
+                              fontSize: 30.0,
+                              color:Colors.blue,
+
+                            ),
+                            text:" click here",
+                            recognizer: TapGestureRecognizer()..onTap = (){
+                              var url = "https://goo.gl/maps/iyYKCMjWSCVEWrNVA";
+                              launch(url);
+                            }
+                        ),
+
+                      ]
+
+                  )
+              ),
               RaisedButton(
                 padding: EdgeInsets.all(15.0),
                 elevation: 5.0,
-                color: Colors.lightGreen.shade200,
+                color: Colors.amber,
                 onPressed: () {
                   Navigator.pushNamed(context, '/second');
                 },
                 child: Text(
                   'Start Questionnaire',
-                  style: TextStyle(fontSize: 40.0, color: Colors.red),
+                  style: TextStyle(fontSize: 40.0, color: Colors.black),
                 ),
               )
             ],
