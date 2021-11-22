@@ -157,7 +157,7 @@ class _UploadPageState extends State<UploadItem>{
                               dropdownValue = newValue!;
                             });
                           },
-                          items: <String>['Books', 'Electronic', 'Furniture', 'Lab Kits', 'Supplies', '']
+                          items: <String>['Books', 'Electronics', 'Furniture', 'Lab Kits', 'Supplies', '']
                               .map<DropdownMenuItem<String>>((String value) {
                             return DropdownMenuItem<String>(
                               value: value,
@@ -197,7 +197,7 @@ class _UploadPageState extends State<UploadItem>{
                           }
                           else{
                             _categoryController.text = dropdownValue;
-                            addItems();
+                            addItems(); // actually adds items to firestoreDB
                             showDialog<String>(
                               context: context,
                               builder: (BuildContext context) => AlertDialog(
