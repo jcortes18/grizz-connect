@@ -1,9 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:dot_navigation_bar/dot_navigation_bar.dart';
-import 'package:grizz_connect/testing.dart';
+//import 'package:dot_navigation_bar/dot_navigation_bar.dart';
 import 'package:grizz_connect/upload.dart';
-import 'package:grizz_connect/main.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'package:flutter/material.dart';
 
@@ -15,19 +13,18 @@ class MarketplaceTab extends StatefulWidget {
 }
 
 class _MarketplaceState extends State<MarketplaceTab> {
-  //final fsInstance = FirebaseFirestore.instance;
   int selectedPage = 0;
 
-  _onTap() {
-    Navigator.of(context).push(MaterialPageRoute(
-        builder: (BuildContext context) => _pageOptions[selectedPage]));
-  }
-  // pages options for bottom navigation bar
-  final _pageOptions = [
-    //otherPage(),
-    Testing(),
-    //otherPage()
-  ];
+  // ** pages options for bottom navigation bar **
+  // _onTap() {
+  //   Navigator.of(context).push(MaterialPageRoute(
+  //       builder: (BuildContext context) => _pageOptions[selectedPage]));
+  // }
+  // final _pageOptions = [
+  //   //otherPage(), // right button
+  //   //otherPage(), // middle button
+  //   //otherPage(), // left button
+  // ];
 
   final Stream<QuerySnapshot> items = FirebaseFirestore.instance.collection("Items").snapshots();
 
@@ -133,69 +130,66 @@ class _MarketplaceState extends State<MarketplaceTab> {
                 ),
 
                 // Item cards column
-                //SizedBox(
-                  //padding: const EdgeInsets.all(20.0),
-                  //height: 500,
-                  //child:
-                  Flexible(
-                    child: StreamBuilder<QuerySnapshot> (
-                    stream: items,
-                    builder: (
-                        BuildContext context,
-                        AsyncSnapshot<QuerySnapshot> snapshot,
-                        ){
-                            if(snapshot.hasError){
-                              return Text("Something went wrong");
-                            }
-                            if(snapshot.connectionState == ConnectionState.waiting){
-                              return Text("Loading...");
-                            }
+                Flexible(
+                  child: StreamBuilder<QuerySnapshot> (
+                  stream: items,
+                  builder: (
+                      BuildContext context,
+                      AsyncSnapshot<QuerySnapshot> snapshot,
+                      ){
+                          if(snapshot.hasError){
+                            return Text("Something went wrong");
+                          }
+                          if(snapshot.connectionState == ConnectionState.waiting){
+                            return Text("Loading...");
+                          }
 
-                            final data = snapshot.requireData;
+                          final data = snapshot.requireData;
 
-                            return ListView.builder(
-                                //scrollDirection: Axis.vertical,
-                                //physics: ScrollPhysics(),
-                                physics: NeverScrollableScrollPhysics(),
-                                shrinkWrap: true,
-                                itemCount: data.size,
-                                itemBuilder: (context, index){
-                                  // return Text('Name: ${data.docs[index]['ItemName']}, Price: ${data.docs[index]['Price']}');
-                                  return Card(
-                                    elevation: 4.0,
-                                    child: Column(
-                                      children: <Widget>[
-                                        ListTile(
-                                          title: Text(data.docs[index]['ItemName']),
-                                          subtitle: Text(data.docs[index]['Price'].toString()),
-                                        ),
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.end,
-                                          children: <Widget>[
-                                            TextButton(
-                                              child: const Text('BUY'),
-                                              onPressed: () {/* ... */},
-                                            ),
-                                            const SizedBox(width: 8),
+                          return ListView.builder(
+                              //scrollDirection: Axis.vertical,
+                              //physics: ScrollPhysics(),
+                              physics: NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemCount: data.size,
+                              itemBuilder: (context, index){
+                                // return Text('Name: ${data.docs[index]['ItemName']}, Price: ${data.docs[index]['Price']}');
+                                return Card(
+                                  elevation: 4.0,
+                                  child: Column(
+                                    children: <Widget>[
+                                      ListTile(
+                                        title: Text(data.docs[index]['ItemName']),
+                                        subtitle: Text(data.docs[index]['Price'].toString()),
+                                      ),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.end,
+                                        children: <Widget>[
+                                          TextButton(
+                                            child: const Text('BUY'),
+                                            onPressed: () {/* ... */},
+                                          ),
+                                          const SizedBox(width: 8),
 
-                                          ],
-                                        ),
-                                      ],
-                                    )
+                                        ],
+                                      ),
+                                    ],
+                                  )
 
-                                    ,
-                                  );
-                                },
-                            );
-                         },
-                  ),
+                                  ,
+                                );
+                              },
+                          );
+                       },
                 ),
+              ),
 
               ] // Column Children
                   ),
         //]
         ),
       ]),
+
       // Floating '+' button
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -205,36 +199,36 @@ class _MarketplaceState extends State<MarketplaceTab> {
         child: const Icon(Icons.add),
         backgroundColor: Colors.amber,
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
 
       // Bottom Navigation Bar
       extendBody: true, //show body behind nav bar
-      bottomNavigationBar: Padding(
-          padding: const EdgeInsets.only(top: 0, bottom: 10),
-          child: DotNavigationBar(
-            backgroundColor: Colors.black,
-            dotIndicatorColor: Colors.white,
-            unselectedItemColor: Colors.grey[300],
-            selectedItemColor: Colors.amber,
-            items: [
-              DotNavigationBarItem(
-                icon: const Icon(Icons.sell),
-              ),
-              DotNavigationBarItem(
-                icon: const Icon(Icons.health_and_safety),
-              ),
-              DotNavigationBarItem(
-                icon: const Icon(Icons.settings),
-              ),
-            ],
-            currentIndex: selectedPage,
-            onTap: (index) {
-              setState(() {
-                selectedPage = index;
-              });
-              _onTap();
-            },
-          )),
+      // bottomNavigationBar: Padding(
+      //     padding: const EdgeInsets.only(top: 0, bottom: 10),
+      //     child: DotNavigationBar(
+      //       backgroundColor: Colors.black,
+      //       dotIndicatorColor: Colors.white,
+      //       unselectedItemColor: Colors.grey[300],
+      //       selectedItemColor: Colors.amber,
+      //       items: [
+      //         DotNavigationBarItem(
+      //           icon: const Icon(Icons.sell),
+      //         ),
+      //         DotNavigationBarItem(
+      //           icon: const Icon(Icons.health_and_safety),
+      //         ),
+      //         DotNavigationBarItem(
+      //           icon: const Icon(Icons.settings),
+      //         ),
+      //       ],
+      //       currentIndex: selectedPage,
+      //       onTap: (index) {
+      //         setState(() {
+      //           selectedPage = index;
+      //         });
+      //         _onTap();
+      //       },
+      //     )),
     );
   }
 
