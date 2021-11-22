@@ -6,8 +6,7 @@ Please attach pages and dependencies for itempage, health form, profile, and any
 
 FYI:
 
-After logging in, the marketplace main page shows. 
-
+After logging in, the main page shows up from where on tap functionality
 
 ## Getting Started
 
@@ -16,8 +15,6 @@ Registration
 Login
 
 Profile 
-
-##Memes instead work on blockchain payment
 
 Marketplace + add hyperlinks to the university selling old system
 
