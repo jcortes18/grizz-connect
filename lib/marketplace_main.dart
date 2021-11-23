@@ -158,11 +158,34 @@ class _MarketplaceState extends State<MarketplaceTab> {
                   ),
                 ),
 
+                //Clear Filter button
+                Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(top: 20.0, left: 3.5),
+                        child: OutlinedButton(
+                          child: const Text('Clear selection'),
+                          style: OutlinedButton.styleFrom(
+                            primary: Colors.black,
+                            //backgroundColor: Colors.amber,
+                            shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
+                            side: const BorderSide(color: Colors.amber),
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              items = FirebaseFirestore.instance.collection("Items").snapshots();
+                            });
+                          },
+                        ),
+                      ),
+                    ]
+                ),
+
                 // Item cards column
                 Flexible(
                   child: StreamBuilder<QuerySnapshot> (
                   stream: items,
-                  //stream: itemsDisplay(),
                   builder: (
                       BuildContext context,
                       AsyncSnapshot<QuerySnapshot> snapshot,
@@ -183,7 +206,7 @@ class _MarketplaceState extends State<MarketplaceTab> {
                               shrinkWrap: true,
                               itemCount: data.size,
                               itemBuilder: (context, index){
-                                
+
                                 return Card(
                                   elevation: 4.0,
                                   child: Column(
