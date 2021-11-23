@@ -62,19 +62,19 @@ class _UploadPageState extends State<UploadItem>{
         fit: StackFit.expand,
         children: [
           Container(
-            padding: const EdgeInsets.only(top: 25, left: 30),
+            padding: const EdgeInsets.only(top: 25, left: 20),
             child: const Text('Enter an item to sell!',
             style: TextStyle(color: Colors.black, fontSize: 28,
                 fontWeight: FontWeight.w700),
            ),
           ),
           SingleChildScrollView(
-            padding: const EdgeInsets.only(top: 60),
+            padding: const EdgeInsets.only(top: 60, left: 20, right: 20),
             child:
               Column(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                    padding: const EdgeInsets.symmetric(vertical: 16),
                     child: TextFormField(
                       controller: _itemNameController,
                       // onChanged: (value){
@@ -93,7 +93,7 @@ class _UploadPageState extends State<UploadItem>{
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                    padding: const EdgeInsets.symmetric(vertical: 16),
                     child: TextFormField(
                       controller: _priceController,
                       // onChanged: (value){
@@ -112,7 +112,7 @@ class _UploadPageState extends State<UploadItem>{
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                    padding: const EdgeInsets.symmetric(vertical: 16),
                     child: TextFormField(
                       controller: _descriptionController,
                       // onChanged: (value){
@@ -130,17 +130,11 @@ class _UploadPageState extends State<UploadItem>{
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                    padding: const EdgeInsets.symmetric(vertical: 16),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Container(
-                          //padding: const EdgeInsets.only(top: 80, left: 30),
-                          child: const Text('Choose a category: ',
-                            style: TextStyle(color: Colors.black, fontSize: 18,
-                                fontWeight: FontWeight.w700),
-                          ),
-                        ),
+                        const Text('Choose a category: ', style: TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.w700),),
                         DropdownButton<String>(
                           isExpanded: true,
                           value: dropdownValue,
@@ -168,20 +162,36 @@ class _UploadPageState extends State<UploadItem>{
                       ],
                     ),
                   ),
-                  const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text('Choose a picture: ',
-                        style: TextStyle(color: Colors.black, fontSize: 18,
-                            fontWeight: FontWeight.w700),
-                      ),
-                    ),
-                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const Text('Choose a picture: ', style: TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.w700),),
+                        OutlinedButton(
+                          child: const Text('Add'),
+                          style: OutlinedButton.styleFrom(
+                            primary: Colors.black,
+                            //backgroundColor: Colors.amber,
+                            shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
+                            side: const BorderSide(color: Colors.amber),
+                          ),
+                          // ***** ADD IMAGES *****
+                          onPressed: () {
+                            // setState(() {
+                            //
+                            // });
+                          },
+                        ),
+                      ],
+                  ),),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
                     child: Center(
                       child: ElevatedButton(
+                        child: const Text('Enter'),
                         style: ElevatedButton.styleFrom(
                           primary: Colors.amber,
                           elevation: 8,
@@ -213,7 +223,7 @@ class _UploadPageState extends State<UploadItem>{
 
                           }
                         },
-                        child: const Text('Enter'),
+
                       ),
                     ),
                   ),
