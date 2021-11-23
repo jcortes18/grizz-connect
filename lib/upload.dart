@@ -193,6 +193,7 @@ class _UploadPageState extends State<UploadItem>{
                       child: ElevatedButton(
                         child: const Text('Enter'),
                         style: ElevatedButton.styleFrom(
+                          onPrimary: Colors.black,
                           primary: Colors.amber,
                           elevation: 8,
                           textStyle: const TextStyle(

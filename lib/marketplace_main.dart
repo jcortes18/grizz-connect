@@ -53,6 +53,7 @@ class _MarketplaceState extends State<MarketplaceTab> {
             child: //<Widget>[
               Column(
                 mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
 
                 // Major Category text row
@@ -199,62 +200,67 @@ class _MarketplaceState extends State<MarketplaceTab> {
 
                           final data = snapshot.requireData;
 
-                          return ListView.builder(
-                              //scrollDirection: Axis.vertical,
-                              //physics: ScrollPhysics(),
-                              physics: NeverScrollableScrollPhysics(),
+                          return MediaQuery.removePadding(
+                            context: context,
+                            removeTop: true,
+                            child: ListView.builder(
+                                //scrollDirection: Axis.vertical,
+                                //physics: ScrollPhysics(),
+                                physics: NeverScrollableScrollPhysics(),
+                                itemBuilder: (context, index){
+                                  return Card(
+                                    elevation: 4.0,
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: <Widget>[
+                                        ListTile(
+                                          title: Text(data.docs[index]['ItemName']),
+                                          subtitle: Text(data.docs[index]['Price'].toString()),
+                                        ),
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.end,
+                                          children: <Widget>[
+                                            TextButton(
+                                              child: const Text('BUY'),
+                                              onPressed: () {/* ... */},
+                                            ),
+                                            const SizedBox(width: 8),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
                               shrinkWrap: true,
                               itemCount: data.size,
-                              itemBuilder: (context, index){
-
-                                return Card(
-                                  elevation: 4.0,
-                                  child: Column(
-                                    children: <Widget>[
-                                      ListTile(
-                                        title: Text(data.docs[index]['ItemName']),
-                                        subtitle: Text(data.docs[index]['Price'].toString()),
-                                      ),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.end,
-                                        children: <Widget>[
-                                          TextButton(
-                                            child: const Text('BUY'),
-                                            onPressed: () {/* ... */},
-                                          ),
-                                          const SizedBox(width: 8),
-
-                                        ],
-                                      ),
-                                    ],
-                                  )
-
-                                  ,
-                                );
-                              },
+                            ),
                           );
                        },
                 ),
               ),
 
-              ] // Column Children
-                  ),
+                ] // Column Children
+              ),
         //]
         ),
         buildFloatingSearchBar(),
       ]),
 
       // Floating '+' button
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => UploadItem()));
-        },
-        child: const Icon(Icons.add),
-        backgroundColor: Colors.amber,
-        elevation: 10.0,
+      floatingActionButton: SizedBox(
+        width: 75.0,
+        height: 75.0,
+        child: FloatingActionButton(
+          onPressed: () {
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => UploadItem()));
+          },
+          child: const Icon(Icons.add, color: Colors.black,),
+          backgroundColor: Colors.amber,
+          elevation: 10.0,
+        ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
 
       // Bottom Navigation Bar
       //extendBody: true, //show body behind nav bar
