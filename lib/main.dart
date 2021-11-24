@@ -22,7 +22,7 @@ void main() async {
       'start': (context) => MyStart(),
       'user_list': (context) => profileInfo(),
       'pro' : (context) => MyForm(),
-      'quiz' : (context) => QuizPage(),
+      'quiz' : (context) => Quiz(),
       'marketplace_main' : (context) => MarketplaceTab(),
       'welcome' : (context) => MyWelcome(),
     },
