@@ -388,12 +388,12 @@ class _MarketplaceState extends State<MarketplaceTab> {
       transition: SlideFadeFloatingSearchBarTransition(),
       actions: [
         FloatingSearchBarAction(
-          // profile icon showed when search is closed
+          // HOME icon showed when search is closed
           showIfOpened: false,
           child: CircularButton(
-            icon: const Icon(Icons.account_circle),
+            icon: const Icon(Icons.house_rounded),
 
-            onPressed: () { /* ..Go to profile page.. */ },
+            onPressed: () { /* ..Go to HOME page.. */ },
           ),
         ),
         FloatingSearchBarAction.searchToClear(
