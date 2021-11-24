@@ -354,12 +354,14 @@ class _MarketplaceState extends State<MarketplaceTab> {
 
   //search bar with profile button
   Widget buildFloatingSearchBar() {
+    TextEditingController _searchQuery = new TextEditingController();
+
     final isPortrait =
         MediaQuery.of(context).orientation == Orientation.portrait;
 
     return FloatingSearchBar(
       hint: 'Search Item...',
-      scrollPadding: const EdgeInsets.only(top: 10, bottom: 56),
+      scrollPadding: const EdgeInsets.only(top: 10, bottom: 56, left: 10, right: 10),
       transitionDuration: const Duration(milliseconds: 800),
       transitionCurve: Curves.easeInOut,
       physics: const BouncingScrollPhysics(),
@@ -368,9 +370,18 @@ class _MarketplaceState extends State<MarketplaceTab> {
       width: isPortrait ? 600 : 500,
       borderRadius: BorderRadius.circular(30),
       debounceDelay: const Duration(milliseconds: 500),
-      automaticallyImplyDrawerHamburger: true,
+      //automaticallyImplyDrawerHamburger: true,
+      closeOnBackdropTap: true,
+      //automaticallyImplyBackButton: false,
       onQueryChanged: (query) {
-        // Call your model, bloc, controller here - A callback that gets invoked when the input of the query inside the TextField changed.
+        _searchQuery.text = query;
+      },
+
+      onSubmitted: (query) {
+        // setState(() {
+        //   items = FirebaseFirestore.instance.collection("Items").where('ItemName', arrayContains: _searchQuery).snapshots();
+        // });
+        print(_searchQuery.text);
       },
       // Specify a custom transition to be used for
       // animating between opened and closed stated.
@@ -392,7 +403,8 @@ class _MarketplaceState extends State<MarketplaceTab> {
       ],
       // List of search results shown below search bar
       builder: (context, transition) {
-        return ClipRRect(
+        return
+        ClipRRect(
           borderRadius: BorderRadius.circular(8),
           child: Material(
             color: Colors.white,
@@ -400,7 +412,7 @@ class _MarketplaceState extends State<MarketplaceTab> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: Colors.accents.map((color) {
-                return Container(height: 50, color: color);
+                return Container(height: 50, color: color, child: Text(_searchQuery.text),);
               }).toList(),
             ),
           ),
