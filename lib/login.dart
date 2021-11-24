@@ -43,14 +43,14 @@ class _MyLoginState extends State<MyLogin> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                      margin: EdgeInsets.only(left: 35, right: 35),
+                      margin: const EdgeInsets.only(left: 35, right: 35),
                       child: Column(
                         children: [
                           TextFormField(
                             onChanged: (val) {
                               setState(() => email = val);
                             },
-                            style: TextStyle(color: Colors.black),
+                            style: const TextStyle(color: Colors.black),
                             decoration: InputDecoration(
                                 fillColor: Colors.grey.shade100,
                                 filled: true,
@@ -96,15 +96,15 @@ class _MyLoginState extends State<MyLogin> {
                                 backgroundColor: const Color(0xff4c505b),
                                 child: IconButton(
                                     iconSize: 42,
-                                    color: Color.fromRGBO(254, 215, 102, 2),
+                                    color: const Color.fromRGBO(254, 215, 102, 2),
                                     onPressed: () async {
-
+                                      setState(() { error = '';});
                                       if (email.isEmpty || pass.isEmpty) {
                                         setState(() => error = ' All fields required ');
                                       }
-                                      else if(!email.endsWith('@oakland.edu')) {
-                                        setState(() => error = ' Wrong email ');
-                                      }
+                                      //else if(!email.endsWith('@oakland.edu')) {
+                                      //  setState(() => error = ' Wrong email ');
+                                      //}
                                       else if(email.isNotEmpty && pass.isNotEmpty){
                                         //setState(()  => error = '');
                                         try {
@@ -114,9 +114,9 @@ class _MyLoginState extends State<MyLogin> {
                                             email: email, password: pass);
                                             //print(userCredential);
                                             //print(userCredential.user);
-                                            Navigator.pushNamed(context, 'start');
+                                            Navigator.pushNamed(context, 'welcome');
                                       } on FirebaseAuthException catch (e) {
-                                        if (e.code == 'user-not-found') {
+                                        if (e.code == 'user-not-found') {  //or use invalid_email
                                           setState(() => error = ' Email not found ');
                                         } else if (e.code == 'wrong-password') {
                                           setState(() => error = ' Wrong password provided ');

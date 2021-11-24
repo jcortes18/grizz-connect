@@ -18,6 +18,8 @@ class _MyRegisterState extends State<MyRegister> {
   String email = '';
   String pass = '';
   String error = '';
+  String standing = '';
+  String major = '';
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +46,7 @@ class _MyRegisterState extends State<MyRegister> {
               icon: const Icon(Icons.person, color: Colors.black, size: 27,),
               label: const Text('Login',
                 style: TextStyle(color: Colors.black, fontSize: 20),
-              ),
+                ),
               onPressed: () => Navigator.pushNamed(context, 'login'),
             ),
           ],
@@ -55,10 +57,10 @@ class _MyRegisterState extends State<MyRegister> {
           children: [
             Container(
 
-              padding: EdgeInsets.only(left: 35, top: 30),
+              padding: const EdgeInsets.only(left: 32, top: 10),
               child: const Text(
                 '\n    Registration Form',
-                style: TextStyle(color: Colors.black, fontSize: 32),
+                style: TextStyle(color: Colors.black, fontSize: 32, fontWeight: FontWeight.bold),
               ),
             ),
 
@@ -66,7 +68,7 @@ class _MyRegisterState extends State<MyRegister> {
               child: Container(
 
                 padding: EdgeInsets.only(
-                    top: MediaQuery.of(context).size.height * 0.2),
+                    top: MediaQuery.of(context).size.height * 0.15),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -103,7 +105,85 @@ class _MyRegisterState extends State<MyRegister> {
                                 fillColor: Colors.amberAccent,
                                 filled: true,
                                 hintText: "Name",
-                                hintStyle: const TextStyle(color: Colors.black54),
+                                hintStyle: const TextStyle(color: Colors.black26),
+
+                                border: OutlineInputBorder(
+
+                                  borderRadius: BorderRadius.circular(10),
+                                )),
+                          ),
+                          const SizedBox(
+
+                            height: 30,
+                          ),
+                          TextFormField(
+                            validator: (val) {
+                              if (val!.isNotEmpty) {
+                                return 'Please enter some text';
+                              }
+                              return null;
+                            },
+                            onChanged: (val) {
+                              //validator: (val) => val.length > 5 ? 'Enter an email': 'null';
+                              setState(() => major = val);
+                            },
+                            style: const TextStyle(color: Colors.black54,),
+                            decoration: InputDecoration(
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: const BorderSide(
+                                    color: Colors.black,
+                                  ),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: const BorderSide(
+                                    color: Colors.black,
+                                  ),
+                                ),
+                                fillColor: Colors.amberAccent,
+                                filled: true,
+                                hintText: "major",
+                                hintStyle: const TextStyle(color: Colors.black26),
+
+                                border: OutlineInputBorder(
+
+                                  borderRadius: BorderRadius.circular(10),
+                                )),
+                          ),
+                          const SizedBox(
+
+                            height: 30,
+                          ),
+                          TextFormField(
+                            validator: (val) {
+                              if (val!.isNotEmpty) {
+                                return 'Please enter some text';
+                              }
+                              return null;
+                            },
+                            onChanged: (val) {
+                              //validator: (val) => val.length > 5 ? 'Enter an email': 'null';
+                              setState(() => standing = val);
+                            },
+                            style: const TextStyle(color: Colors.black54,),
+                            decoration: InputDecoration(
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: const BorderSide(
+                                    color: Colors.black,
+                                  ),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  borderSide: const BorderSide(
+                                    color: Colors.black,
+                                  ),
+                                ),
+                                fillColor: Colors.amberAccent,
+                                filled: true,
+                                hintText: "Standing",
+                                hintStyle: const TextStyle(color: Colors.black26),
 
                                 border: OutlineInputBorder(
 
@@ -135,7 +215,7 @@ class _MyRegisterState extends State<MyRegister> {
                                 fillColor: Colors.amberAccent,
                                 filled: true,
                                 hintText: "Email",
-                                hintStyle: const TextStyle(color: Colors.black54),
+                                hintStyle: const TextStyle(color: Colors.black26),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10),
                                 )),
@@ -165,7 +245,7 @@ class _MyRegisterState extends State<MyRegister> {
                                 fillColor: Colors.amberAccent,
                                 filled: true,
                                 hintText: "Password",
-                                hintStyle: const TextStyle(color: Colors.black54),
+                                hintStyle: const TextStyle(color: Colors.black26),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10),
                                 )),
@@ -193,7 +273,7 @@ class _MyRegisterState extends State<MyRegister> {
                                     onPressed: () async {
                                       setState(() => error = '');
 
-                                      if(displayName.isEmpty || email.isEmpty || pass.isEmpty) {
+                                      if(displayName.isEmpty || email.isEmpty || pass.isEmpty || standing.isEmpty || major.isEmpty) {
                                         setState(() => error = ' All fields required ');
                                       }
 
@@ -203,12 +283,10 @@ class _MyRegisterState extends State<MyRegister> {
                                       else
                                       { //start if
                                         try { //try input
-
                                           UserCredential result = await _auth.createUserWithEmailAndPassword(
                                               email: email, password: pass);
                                           User? user = result.user;
-
-                                          await DatabaseService(uid: user!.uid).updateUserData(displayName, 'new major', 'senior');
+                                          await DatabaseService(uid: user!.uid).updateUserData(displayName, major, standing);
                                           Navigator.pushNamed(context, 'start');
                                         } on FirebaseAuthException catch (e) {
                                           if (e.code == 'weak-password') {
@@ -237,14 +315,41 @@ class _MyRegisterState extends State<MyRegister> {
                             ],
                           ),
 
-                          const SizedBox(height: 50.0),
-                          Text(error,
-                              style: const TextStyle(color: Colors.red, fontSize: 20.0,
-                                fontWeight: FontWeight.w700,
-                              )
+
+                          /*
+                          const SizedBox( //return to login
+                            height: 50,
+                          ),
+                          Row(  //return
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              TextButton(
+                                onPressed: () {
+
+                                  Navigator.pushNamed(context, 'login');
+                                },
+                                child: const Text(
+                                  'Already have an account? Login!',
+                                  textAlign: TextAlign.left,
+                                  style: TextStyle(
+                                      decoration: TextDecoration.underline,
+                                      color: Colors.black,
+                                      fontSize: 20),
+                                ),
+                                style: const ButtonStyle(
+                                ),
+                              ),
+                            ],
                           )
+                          */
 
 
+                              const SizedBox(height: 10.0),
+                              Text(error,
+                                  style: const TextStyle(color: Colors.red, fontSize: 20.0,
+                                    fontWeight: FontWeight.w700,
+                                  )
+                              )
                         ],
 
                       ),

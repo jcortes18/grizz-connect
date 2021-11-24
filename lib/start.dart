@@ -1,10 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-
+import 'package:grizz_connect/user_list.dart';
+import 'package:grizz_connect/database.dart';
+import 'package:provider/provider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class MyStart extends StatefulWidget {
+  const MyStart({Key? key}) : super(key: key);
 
 
   @override
@@ -14,79 +17,56 @@ class MyStart extends StatefulWidget {
 
 class _MyStartState extends State<MyStart> {
 
+  final FirebaseAuth auth = FirebaseAuth.instance;
+
   // text field state
   String email = '';
   String password = '';
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.brown[100],
-      appBar: AppBar(
-        backgroundColor: Colors.amberAccent[400],
+  Widget build(BuildContext context) {  //start widget
 
-        actions: <Widget>[
-          TextButton.icon(
-            icon: const Icon(Icons.person,
-              color: Colors.black,
-              size: 32,
+    return StreamProvider<QuerySnapshot?>.value(
+      //startstream
+      value: DatabaseService(uid: '').userData,
+      initialData: null,
+
+
+      child: Scaffold(
+
+        backgroundColor: Colors.brown[100],
+        appBar: AppBar(
+          backgroundColor: Colors.amberAccent[400],
+
+          actions: <Widget>[
+            TextButton.icon(
+              icon: const Icon(Icons.person,
+                color: Colors.black,
+                size: 32,
+              ),
+
+              label: const Text('Logout',
+                style: TextStyle(color: Colors.black, fontSize: 20),
+
+              ),
+
+              onPressed: () => Navigator.pushNamed(context, 'login'),
             ),
-
-            label: const Text('Logout',
-              style: TextStyle(color: Colors.black, fontSize: 20),
-
+            IconButton(
+              icon: const Icon(
+                Icons.home,
+                color: Colors.black,
+              ),
+              onPressed: () {
+                Navigator.pushNamed(context, 'welcome');
+              },
             ),
-
-            onPressed: () => Navigator.pushNamed(context, 'login'),
-          ),
-        ],
-      ),
-      body: Container(
-        padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 50.0),
-        child: Form(
-          //key: _formKey,
-          child: Column(
-            children: <Widget>[
-              SizedBox(height: 20.0),
-              TextFormField(
-                //validator: (val) => val.isEmpty ? 'Enter an email' : null,
-                onChanged: (val) {
-                  setState(() => email = val);
-                },
-              ),
-              SizedBox(height: 20.0),
-              TextFormField(
-                obscureText: true,
-                onChanged: (val) {
-                  setState(() => password = val);
-                },
-              ),
-              SizedBox(height: 20.0),
-              RaisedButton(
-                  child: const Text(
-                    'Sign In',
-                  ),
-                  onPressed: () async {
-                    print(email);
-
-                    String emailDomain = '';
-                    if(email.length > 11) {
-                      emailDomain = email.substring((email.length - 12));
-                    }
-                    if(email.length < 12) {
-                      print('invalid email');
-                    }
-                    print('domain is: ' + emailDomain);
-                    if( emailDomain !="@oakland.edu"){
-                      print('invalid, must be oakland university email');
-                    }
-
-                  }
-              ),
-
-            ],
-          ),
+          ],
         ),
+
+        body:
+        profileInfo()
+
       ),
     );
   }
