@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import 'comments.dart';
+
 
 class ItemPage extends StatefulWidget {
   final DocumentSnapshot item;
@@ -41,9 +43,11 @@ class _ItemPageState extends State<ItemPage> {
                     padding: EdgeInsets.all(4.0),
                     elevation: 5.0,
                     color: Color.fromRGBO(47, 46, 46, 1.0),
-                    onPressed: () {
-                      Navigator.pushNamed(context, 'comments');
-                    },
+                    onPressed: () => showComments(
+                      context,
+                      itemId: widget.item['Items'],
+                      ownerId: widget.item['User'],
+                    ),
                     child: Text(
                       'Get in Contact',
                       style: TextStyle(fontSize: 30.0, color: Colors.white70),
@@ -54,6 +58,14 @@ class _ItemPageState extends State<ItemPage> {
         )
     );
   }
+}
+showComments(BuildContext context, {required String itemId, required String ownerId}){
+  Navigator.push(context, MaterialPageRoute(builder: (context){
+    return Comments(
+      itemId: itemId,
+      postOwnerId: ownerId,
+    );
+  }));
 }
 
 // **CODE FOR CUSTOM APP BAR** //
