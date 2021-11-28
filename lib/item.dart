@@ -37,6 +37,18 @@ class _ItemPageState extends State<ItemPage> {
                       style: const TextStyle(fontWeight: FontWeight.bold)),)),
                   Card(color: const Color.fromRGBO(201, 199, 199, 1.0), child: ListTile(title: Text("Details: " + widget.item['Description'].toString(), textAlign: TextAlign.center,
                       style: const TextStyle(fontWeight: FontWeight.bold)),)),
+                  RaisedButton(
+                    padding: EdgeInsets.all(4.0),
+                    elevation: 5.0,
+                    color: Color.fromRGBO(47, 46, 46, 1.0),
+                    onPressed: () {
+                      Navigator.pushNamed(context, 'comments');
+                    },
+                    child: Text(
+                      'Get in Contact',
+                      style: TextStyle(fontSize: 30.0, color: Colors.white70),
+                    ),
+                  ),
                 ]
             )
         )
