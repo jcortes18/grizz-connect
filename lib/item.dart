@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import 'database.dart';
+
 
 class ItemPage extends StatefulWidget {
   final DocumentSnapshot item;
@@ -12,6 +14,8 @@ class ItemPage extends StatefulWidget {
   _ItemPageState createState() => _ItemPageState();}
 
 class _ItemPageState extends State<ItemPage> {
+  final myController = TextEditingController();
+  String comment = '';
 
   @override
   Widget build(BuildContext context) {
@@ -31,18 +35,80 @@ class _ItemPageState extends State<ItemPage> {
                 children: <Widget>[
                   //carousel(context),
                   Image.network(widget.item['imageURL']),
-                  Card(color: const Color.fromRGBO(201, 199, 199, 1.0), child: ListTile(title: Text("Item Name: " + widget.item['ItemName'], textAlign: TextAlign.center,
-                      style: const TextStyle(fontWeight: FontWeight.bold)),)),
-                  Card(color: const Color.fromRGBO(201, 199, 199, 1.0), child: ListTile(title: Text("Price: " + widget.item['Price'].toString(), textAlign: TextAlign.center,
-                      style: const TextStyle(fontWeight: FontWeight.bold)),)),
-                  Card(color: const Color.fromRGBO(201, 199, 199, 1.0), child: ListTile(title: Text("Details: " + widget.item['Description'].toString(), textAlign: TextAlign.center,
-                      style: const TextStyle(fontWeight: FontWeight.bold)),)),
-                ]
-            )
+                  Card(color: const Color.fromRGBO(201, 199, 199, 1.0),
+                      child: ListTile(title: Text(
+                          "Item Name: " + widget.item['ItemName'],
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold)),)),
+                  Card(color: const Color.fromRGBO(201, 199, 199, 1.0),
+                      child: ListTile(title: Text(
+                          "Price: " + widget.item['Price'].toString(),
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold)),)),
+                  Card(color: const Color.fromRGBO(201, 199, 199, 1.0),
+                      child: ListTile(title: Text(
+                          "Details: " + widget.item['Description'].toString(),
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold)),)),
+                  TextFormField(validator: (val) {
+                    if (val!.isNotEmpty) {
+                      return 'Please enter some text';}
+                    return null;},
+                    onChanged: (val) {
+                      //validator: (val) => val.length > 5 ? 'Enter an email': 'null';
+                      setState(() => comment = val);
+                    },
+                    decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        contentPadding:
+                        EdgeInsets.only(left: 15, bottom: 11, top: 11, right: 15),
+                        hintText: "Add Comment"),
+                  ),
+                  FloatingActionButton.extended(
+                    onPressed: () async { //showDialog(context: context, builder: (context) {
+                      //return AlertDialog(content: Text(myController.text),);
+                      await DatabaseService(uid: widget.item.id).updateComments(
+                          comment);
+                    },
+                    label: const Text('Add Comment'),
+                    icon: const Icon(Icons.add_comment),
+                    //.thumb_up),
+                    backgroundColor: Colors.amber,
+                    tooltip: 'Add Comment',
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: StreamBuilder<QuerySnapshot>(
+                        stream: FirebaseFirestore.instance.collection('comments')
+                            .doc(widget.item.id)
+                            .collection('comments').snapshots(),
+                        builder: (context, snapshot) {
+                          if (!snapshot.hasData) {
+                            return Center(child: CircularProgressIndicator(),);
+                          } else {
+                            return ListView(
+                              shrinkWrap: true,
+                              children: snapshot.data!.docs.map((doc) {
+                                return Card(child: ListTile(
+                                  title: Text(doc['comment']),),);
+                              }).toList(),
+                            );
+                          }
+                        }
+                    ),
+                  ),
+                ])
         )
     );
   }
 }
+
+
 
 // **CODE FOR CUSTOM APP BAR** //
 
