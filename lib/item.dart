@@ -54,6 +54,7 @@ class _ItemPageState extends State<ItemPage> {
                           style: const TextStyle(
                               fontWeight: FontWeight.bold)),)),
                   TextFormField(validator: (val) {
+
                     if (val!.isNotEmpty) {
                       return 'Please enter some text';}
                     return null;},
@@ -61,19 +62,23 @@ class _ItemPageState extends State<ItemPage> {
                       //validator: (val) => val.length > 5 ? 'Enter an email': 'null';
                       setState(() => comment = val);
                     },
+                    controller: myController,
                     decoration: InputDecoration(
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
                         contentPadding:
                         EdgeInsets.only(left: 15, bottom: 11, top: 11, right: 15),
-                        hintText: "Add Comment"),
+                        hintText: "Add Comment",
+                        suffixIcon: IconButton(
+                          onPressed: myController.clear,
+                          icon: Icon(Icons.clear),)),
                   ),
                   FloatingActionButton.extended(
                     onPressed: () async { //showDialog(context: context, builder: (context) {
                       //return AlertDialog(content: Text(myController.text),);
                       await DatabaseService(uid: widget.item.id).updateComments(
-                          comment);
+                          comment); myController.clear();
                     },
                     label: const Text('Add Comment'),
                     icon: const Icon(Icons.add_comment),
