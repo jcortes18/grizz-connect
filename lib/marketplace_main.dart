@@ -13,6 +13,11 @@ class MarketplaceTab extends StatefulWidget {
 }
 
 class _MarketplaceState extends State<MarketplaceTab> {
+  TextEditingController _searchController = TextEditingController();
+
+  late Future resultsLoaded;
+  List _allResults = [];
+  List _resultsList = [];
   int selectedPage = 0;
   // ** pages options for bottom navigation bar **
   // _onTap() {
@@ -29,21 +34,78 @@ class _MarketplaceState extends State<MarketplaceTab> {
   // final Stream<QuerySnapshot> items = FirebaseFirestore.instance.collection("Items").where("Category", isEqualTo: _filterButtonSelection).snapshots();
   late Stream<QuerySnapshot> items;
   late Stream<QuerySnapshot> items1;
-  
-  final TextEditingController _searchQuery = new TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    // getSnapshot();
     items = FirebaseFirestore.instance.collection("Items").snapshots();
+    _searchController.addListener(_onSearchChanged);
+  }
+
+  @override
+  void dispose() {
+    _searchController.removeListener(_onSearchChanged);
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    resultsLoaded = getUsersPastTripsStreamSnapshots();
+  }
+
+  _onSearchChanged() {
+    searchResultsList();
+  }
+
+  searchResultsList() {
+    var showResults = [];
+
+    if(_searchController.text != "") {
+      for(var itemSnapshot in _allResults){
+        var title = itemSnapshot.get('ItemName').toLowerCase();
+        // var des = itemSnapshot.get('Description').toLowerCase();
+
+        if(title.contains(_searchController.text.toLowerCase())) {
+          showResults.add(itemSnapshot);
+          print(itemSnapshot.get('ItemName'));
+        }
+        // if(des.contains(_searchController.text.toLowerCase())){
+        //   showResults.add(itemSnapshot);
+        //   print(itemSnapshot.get('Description'));
+        // }
+      }
+    }
+    else {
+      showResults = List.from(_allResults);
+    }
+
+    setState(() {
+      _resultsList = showResults;
+    });
+  }
+
+  getUsersPastTripsStreamSnapshots() async {
+    final FirebaseAuth _auth = FirebaseAuth.instance;
+    final user = _auth.currentUser;
+    final userid = user!.uid.toString();
+
+    var data = await FirebaseFirestore.instance
+        .collection('Items')
+        .get();
+    setState(() {
+      _allResults = data.docs;
+    });
+    searchResultsList();
+    return "complete";
   }
 
   @override
   Widget build(BuildContext context) {
-    final FirebaseAuth _auth = FirebaseAuth.instance;
-    final user = _auth.currentUser;
-    final userid = user!.uid.toString();
+    // final FirebaseAuth _auth = FirebaseAuth.instance;
+    // final user = _auth.currentUser;
+    // final userid = user!.uid.toString();
     final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
 
     String name = "";
@@ -54,7 +116,7 @@ class _MarketplaceState extends State<MarketplaceTab> {
         elevation: 0.0,
         backgroundColor: Colors.transparent,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios, color: Colors.black,),
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.black,),
           onPressed: () {
             Navigator.of(context).pop();
           },
@@ -63,13 +125,9 @@ class _MarketplaceState extends State<MarketplaceTab> {
         title: Card(
           elevation: 0.0,
           child: TextField(
+            controller: _searchController,
             decoration: const InputDecoration(
                 prefixIcon: Icon(Icons.search), hintText: 'Search...'),
-            onChanged: (val) {
-              setState(() {
-                name = val;
-              });
-            },
           ),
         ),
 
@@ -86,7 +144,6 @@ class _MarketplaceState extends State<MarketplaceTab> {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-
                 // Major Category text row
                 Row(
                     mainAxisSize: MainAxisSize.min,
@@ -214,61 +271,74 @@ class _MarketplaceState extends State<MarketplaceTab> {
                     ]
                 ),
 
-                // Item cards column
                 Flexible(
-                  child: StreamBuilder<QuerySnapshot> (
-                  stream: items,
-                  builder: (
-                      BuildContext context,
-                      AsyncSnapshot<QuerySnapshot> snapshot,
-                      ){
-                          if(snapshot.hasError){
-                            return Text("Something went wrong");
-                          }
-                          if(snapshot.connectionState == ConnectionState.waiting){
-                            return Text("Loading...");
-                          }
+                  child: MediaQuery.removePadding(
+                    context: context,
+                    removeTop: true,
+                    child: ListView.builder(
+                      //scrollDirection: Axis.vertical,
+                      physics: NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: _resultsList.length,
+                      itemBuilder: (BuildContext context, int index) =>
+                          buildCard(context, _resultsList[index]),
 
-                          final data = snapshot.requireData;
-
-                          return MediaQuery.removePadding(
-                            context: context,
-                            removeTop: true,
-                            child: ListView.builder(
-                                //scrollDirection: Axis.vertical,
-                                //physics: ScrollPhysics(),
-                                physics: NeverScrollableScrollPhysics(),
-                                itemBuilder: (context, index){
-                                  return Card(
-                                    elevation: 4.0,
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: <Widget>[
-                                        ListTile(
-                                          title: Text(data.docs[index]['ItemName']),
-                                          subtitle: Text(data.docs[index]['Price'].toString()),
-                                        ),
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.end,
-                                          children: <Widget>[
-                                            TextButton(
-                                              child: const Text('BUY'),
-                                              onPressed: () {/* ... */},
-                                            ),
-                                            const SizedBox(width: 8),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                },
-                              shrinkWrap: true,
-                              itemCount: data.size,
-                            ),
-                          );
-                       },
-                ),
-              ),
+                    ),
+                  ),
+                  ),
+              //   Item cards column
+              //   Flexible(
+              //     child: StreamBuilder<QuerySnapshot> (
+              //     stream: items,
+              //     builder: (
+              //         BuildContext context,
+              //         AsyncSnapshot<QuerySnapshot> snapshot,
+              //         ){
+              //             if(snapshot.hasError){
+              //               return Text("Something went wrong");
+              //             }
+              //             if(snapshot.connectionState == ConnectionState.waiting){
+              //               return Text("Loading...");
+              //             }
+              //
+              //             final data = snapshot.requireData;
+              //
+              //             return MediaQuery.removePadding(
+              //               context: context,
+              //               removeTop: true,
+              //               child: ListView.builder(
+              //                   physics: NeverScrollableScrollPhysics(),
+              //                   itemBuilder: (context, index){
+              //                     return Card(
+              //                       elevation: 4.0,
+              //                       child: Column(
+              //                         mainAxisSize: MainAxisSize.min,
+              //                         children: <Widget>[
+              //                           ListTile(
+              //                             title: Text(data.docs[index]['ItemName']),
+              //                             subtitle: Text(data.docs[index]['Price'].toString()),
+              //                           ),
+              //                           Row(
+              //                             mainAxisAlignment: MainAxisAlignment.end,
+              //                             children: <Widget>[
+              //                               TextButton(
+              //                                 child: const Text('BUY'),
+              //                                 onPressed: () {/* ... */},
+              //                               ),
+              //                               const SizedBox(width: 8),
+              //                             ],
+              //                           ),
+              //                         ],
+              //                       ),
+              //                     );
+              //                   },
+              //                 shrinkWrap: true,
+              //                 itemCount: data.size,
+              //               ),
+              //             );
+              //          },
+              //   ),
+              // ),
 
                 ] // Column Children
               ),
@@ -406,7 +476,49 @@ class _MarketplaceState extends State<MarketplaceTab> {
       //       },
       //     )),
     );
-  }}
+  }
+  Widget buildCard(BuildContext context, DocumentSnapshot document){
+    final _item = document.get('ItemName');
+    final _price = document.get('Price');
+
+    return Container(
+      child: Card(
+        elevation: 4.0,
+        child: InkWell(
+          onTap: () {},
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ListTile(
+                    title: Text(_item),
+                    subtitle: Text(_price.toString()),
+                  ),
+                ),
+                // Padding(
+                //   padding: const EdgeInsets.all(8.0),
+                //   child: Row(
+                //     mainAxisAlignment: MainAxisAlignment.end,
+                //     children: <Widget>[
+                //       TextButton(
+                //         child: const Text('BUY'),
+                //         onPressed: () {/* ... */},
+                //       ),
+                //       const SizedBox(width: 8),
+                //     ],
+                //   ),
+                // ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+
+  }
+}
 
   // Widget buildItemList(String selection){
   //   final Stream<QuerySnapshot> allItems = FirebaseFirestore.instance.collection("Items").where("Category", isEqualTo: selection).snapshots();
