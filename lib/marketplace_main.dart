@@ -570,7 +570,7 @@ class _MarketplaceState extends State<MarketplaceTab> {
                         Container(
                           margin: const EdgeInsets.only(top: 15),
                           child: TextButton(
-                            child: const Text('BUY'),
+                            child: const Text('VIEW'),
                             onPressed: () {/* ... */},
                           ),
                         ),
