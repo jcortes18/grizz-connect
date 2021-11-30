@@ -15,49 +15,143 @@ class MarketplaceTab extends StatefulWidget {
 }
 
 class _MarketplaceState extends State<MarketplaceTab> {
+  TextEditingController _searchController = TextEditingController();
+  TextEditingController _filterController = TextEditingController();
+
+  late Future resultsLoaded;
+  List _allResults = [];
+  List _resultsList = [];
   int selectedPage = 0;
-  // ** pages options for bottom navigation bar **
-  // _onTap() {
-  //   Navigator.of(context).push(MaterialPageRoute(
-  //       builder: (BuildContext context) => _pageOptions[selectedPage]));
-  // }
-  // final _pageOptions = [
-  //   //otherPage(), // right button
-  //   //otherPage(), // middle button
-  //   //otherPage(), // left button
-  // ];
-
-
-  // final Stream<QuerySnapshot> items = FirebaseFirestore.instance.collection("Items").where("Category", isEqualTo: _filterButtonSelection).snapshots();
-  late Stream<QuerySnapshot> items;
 
   @override
   void initState() {
     super.initState();
-    // getSnapshot();
-    items = FirebaseFirestore.instance.collection("Items").snapshots();
+    //items = FirebaseFirestore.instance.collection("Items").snapshots();
+    _searchController.addListener(_onSearchChanged);
   }
 
   @override
-  Widget build(BuildContext context) {
+  void dispose() {
+    _searchController.removeListener(_onSearchChanged);
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    resultsLoaded = getItemsStreamSnapshots();
+  }
+
+  _onSearchChanged() {
+    searchResultsList();
+  }
+
+  searchResultsList() {
+    var showResults = [];
+
+    if(_searchController.text != "") {
+      for(var itemSnapshot in _allResults){
+        var title = itemSnapshot.get('ItemName').toLowerCase();
+
+        if(title.contains(_searchController.text.toLowerCase())) {
+          showResults.add(itemSnapshot);
+        }
+      }
+    }
+    else {
+      showResults = List.from(_allResults);
+    }
+    setState(() {
+      _resultsList = showResults;
+    });
+  }
+
+  filterResultsList() {
+    var showResults = [];
+
+    if(_filterController.text != "") {
+      for(var itemSnapshot in _allResults){
+        var category = itemSnapshot.get('Category').toLowerCase();
+
+        if(category.contains(_filterController.text.toLowerCase())) {
+          showResults.add(itemSnapshot);
+        }
+      }
+    }
+    else {
+      showResults = List.from(_allResults);
+    }
+    setState(() {
+      _resultsList = showResults;
+    });
+  }
+
+  getItemsStreamSnapshots() async {
     final FirebaseAuth _auth = FirebaseAuth.instance;
     final user = _auth.currentUser;
     final userid = user!.uid.toString();
 
+    var data = await FirebaseFirestore.instance
+        .collection('Items')
+        .get();
+    setState(() {
+      _allResults = data.docs;
+    });
+    searchResultsList();
+    return "complete";
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
 
     return Scaffold(
+      extendBodyBehindAppBar: true,
+      //backgroundColor: Colors.white30,
+      appBar: AppBar(
+        elevation: 0.0,
+        backgroundColor: Colors.transparent,
+        leading: Padding(
+          padding:  const EdgeInsets.only(left:20),
+          child: IconButton(
+            icon: const Icon(Icons.arrow_back_ios, color: Colors.black,),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ),
+        titleSpacing: 0,
+        title: Padding(
+          padding: const EdgeInsets.only(right:20),
+          child: Card(
+            elevation: 5.0,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(30.0),
+            ),
+            child: TextField(
+              controller: _searchController,
+              decoration: const InputDecoration(
+                border: InputBorder.none,
+                  contentPadding: EdgeInsets.only(top:14),
+                prefixIcon: Icon(Icons.search), hintText: 'Search...'),
+            ),
+          ),
+        ),
+
+      ),
       body: Stack(fit: StackFit.expand, children: [
         //buildFloatingSearchBar(),
         SingleChildScrollView(
             scrollDirection: Axis.vertical,
             physics: AlwaysScrollableScrollPhysics(),
+            //padding: const EdgeInsets.only(top: 140, right:20, left: 20),
             padding: const EdgeInsets.only(top: 140, right:20, left: 20),
             child: //<Widget>[
               Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-
                 // Major Category text row
                 Row(
                     mainAxisSize: MainAxisSize.min,
@@ -80,8 +174,12 @@ class _MarketplaceState extends State<MarketplaceTab> {
                       Column(children: [
                         TextButton(
                             onPressed: () {
+                              // setState(() {
+                              //   items = FirebaseFirestore.instance.collection("Items").where("Category", isEqualTo: "Books").snapshots();
+                              // });
                               setState(() {
-                                items = FirebaseFirestore.instance.collection("Items").where("Category", isEqualTo: "Books").snapshots();
+                                _filterController.text = 'Books';
+                                filterResultsList();
                               });
                             },
                             child: const Icon(
@@ -94,8 +192,12 @@ class _MarketplaceState extends State<MarketplaceTab> {
                       Column(children: [
                         TextButton(
                             onPressed: () {
+                              // setState(() {
+                              //   items = FirebaseFirestore.instance.collection("Items").where("Category", isEqualTo: "Furniture").snapshots();
+                              // });
                               setState(() {
-                                items = FirebaseFirestore.instance.collection("Items").where("Category", isEqualTo: "Furniture").snapshots();
+                                _filterController.text = 'Furniture';
+                                filterResultsList();
                               });
                             },
                             child: const Icon(
@@ -108,8 +210,12 @@ class _MarketplaceState extends State<MarketplaceTab> {
                       Column(children: [
                         TextButton(
                             onPressed: () {
+                              // setState(() {
+                              //   items = FirebaseFirestore.instance.collection("Items").where("Category", isEqualTo: "Electronics").snapshots();
+                              // });
                               setState(() {
-                                items = FirebaseFirestore.instance.collection("Items").where("Category", isEqualTo: "Electronics").snapshots();
+                                _filterController.text = 'Electronics';
+                                filterResultsList();
                               });
                             },
                             child: const Icon(
@@ -122,8 +228,12 @@ class _MarketplaceState extends State<MarketplaceTab> {
                       Column(children: [
                         TextButton(
                             onPressed: () {
+                              // setState(() {
+                              //   items = FirebaseFirestore.instance.collection("Items").where("Category", isEqualTo: "Lab Kits").snapshots();
+                              // });
                               setState(() {
-                                items = FirebaseFirestore.instance.collection("Items").where("Category", isEqualTo: "Lab Kits").snapshots();
+                                _filterController.text = 'Lab Kits';
+                                filterResultsList();
                               });
                             },
                             child: const Icon(
@@ -136,8 +246,12 @@ class _MarketplaceState extends State<MarketplaceTab> {
                       Column(children: [
                         TextButton(
                             onPressed: () {
+                              // setState(() {
+                              //   items = FirebaseFirestore.instance.collection("Items").where("Category", isEqualTo: "Supplies").snapshots();
+                              // });
                               setState(() {
-                                items = FirebaseFirestore.instance.collection("Items").where("Category", isEqualTo: "Supplies").snapshots();
+                                _filterController.text = 'Supplies';
+                                filterResultsList();
                               });
                             },
                             child: const Icon(
@@ -149,7 +263,12 @@ class _MarketplaceState extends State<MarketplaceTab> {
                       ]),
                       Column(children: [
                         TextButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              setState(() {
+                                _filterController.text = 'Favorites';
+                                filterResultsList();
+                              });
+                            },
                             child: const Icon(
                               Icons.favorite,
                               color: Colors.amber,
@@ -177,7 +296,9 @@ class _MarketplaceState extends State<MarketplaceTab> {
                           ),
                           onPressed: () {
                             setState(() {
-                              items = FirebaseFirestore.instance.collection("Items").snapshots();
+                              _searchController.clear();
+                              _filterController.clear();
+                              filterResultsList();
                             });
                           },
                         ),
@@ -185,70 +306,26 @@ class _MarketplaceState extends State<MarketplaceTab> {
                     ]
                 ),
 
-                // Item cards column
+                // Item cards
                 Flexible(
-                  child: StreamBuilder<QuerySnapshot> (
-                  stream: items,
-                  builder: (
-                      BuildContext context,
-                      AsyncSnapshot<QuerySnapshot> snapshot,
-                      ){
-                          if(snapshot.hasError){
-                            return Text("Something went wrong");
-                          }
-                          if(snapshot.connectionState == ConnectionState.waiting){
-                            return Text("Loading...");
-                          }
-
-                          final data = snapshot.requireData;
-
-                          return MediaQuery.removePadding(
-                            context: context,
-                            removeTop: true,
-                            child: ListView.builder(
-                                //scrollDirection: Axis.vertical,
-                                //physics: ScrollPhysics(),
-                                physics: NeverScrollableScrollPhysics(),
-                                itemBuilder: (context, index){
-                                  return Card(
-                                    elevation: 4.0,
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: <Widget>[
-                                        ListTile(
-                                          title: Text(data.docs[index]['ItemName']),
-                                          subtitle: Text(data.docs[index]['Price'].toString()),
-                                        ),
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.end,
-                                          children: <Widget>[
-                                            TextButton(
-                                              child: const Text('BUY'),
-                                              onPressed: () {
-                                                Navigator.push(
-                                                    context, MaterialPageRoute(builder: (context) => ItemPage(item: data.docs[index])));
-                                                },
-                                            ),
-                                            const SizedBox(width: 8),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                },
-                              shrinkWrap: true,
-                              itemCount: data.size,
-                            ),
-                          );
-                       },
-                ),
-              ),
+                  child: MediaQuery.removePadding(
+                    context: context,
+                    removeTop: true,
+                    child: ListView.builder(
+                      physics: NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: _resultsList.length,
+                      itemBuilder: (BuildContext context, int index) =>
+                          buildCard(context, _resultsList[index]),
+                    ),
+                  ),
+                  ),
 
                 ] // Column Children
               ),
-        //]
+
         ),
-        buildFloatingSearchBar(),
+
       ]),
 
       // Floating '+' button
@@ -266,164 +343,71 @@ class _MarketplaceState extends State<MarketplaceTab> {
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-
-      // Bottom Navigation Bar
-      //extendBody: true, //show body behind nav bar
-      // bottomNavigationBar: Padding(
-      //     padding: const EdgeInsets.only(top: 0, bottom: 10),
-      //     child: DotNavigationBar(
-      //       backgroundColor: Colors.black,
-      //       dotIndicatorColor: Colors.white,
-      //       unselectedItemColor: Colors.grey[300],
-      //       selectedItemColor: Colors.amber,
-      //       items: [
-      //         DotNavigationBarItem(
-      //           icon: const Icon(Icons.sell),
-      //         ),
-      //         DotNavigationBarItem(
-      //           icon: const Icon(Icons.health_and_safety),
-      //         ),
-      //         DotNavigationBarItem(
-      //           icon: const Icon(Icons.settings),
-      //         ),
-      //       ],
-      //       currentIndex: selectedPage,
-      //       onTap: (index) {
-      //         setState(() {
-      //           selectedPage = index;
-      //         });
-      //         _onTap();
-      //       },
-      //     )),
     );
   }
+  Widget buildCard(BuildContext context, DocumentSnapshot document){
+    final _item = document.get('ItemName');
+    final _price = document.get('Price');
+    final _image = document.get('imageURL');
 
-  // Widget buildItemList(String selection){
-  //   final Stream<QuerySnapshot> allItems = FirebaseFirestore.instance.collection("Items").where("Category", isEqualTo: selection).snapshots();
-  //
-  //   // if searchbar selection is not empty, then stream == search bar text
-  //   // if filter button is selected, then stream == filter button ToString()
-  //   // if no filter button selected and searchbar is empty, then stream == all items in Item collection
-  //   final String selection;
-  //
-  //   return StreamBuilder<QuerySnapshot> (
-  //     stream: items,
-  //     builder: (
-  //         BuildContext context,
-  //         AsyncSnapshot<QuerySnapshot> snapshot,
-  //         ){
-  //       if(snapshot.hasError){
-  //         return Text("Something went wrong");
-  //       }
-  //       if(snapshot.connectionState == ConnectionState.waiting){
-  //         return Text("Loading...");
-  //       }
-  //
-  //       final data = snapshot.requireData;
-  //
-  //       return ListView.builder(
-  //         //scrollDirection: Axis.vertical,
-  //         //physics: ScrollPhysics(),
-  //         physics: NeverScrollableScrollPhysics(),
-  //         shrinkWrap: true,
-  //         itemCount: data.size,
-  //         itemBuilder: (context, index){
-  //           // return Text('Name: ${data.docs[index]['ItemName']}, Price: ${data.docs[index]['Price']}');
-  //           return Card(
-  //             elevation: 4.0,
-  //             child: Column(
-  //               children: <Widget>[
-  //                 ListTile(
-  //                   title: Text(data.docs[index]['ItemName']),
-  //                   subtitle: Text(data.docs[index]['Price'].toString()),
-  //                 ),
-  //                 Row(
-  //                   mainAxisAlignment: MainAxisAlignment.end,
-  //                   children: <Widget>[
-  //                     TextButton(
-  //                       child: const Text('BUY'),
-  //                       onPressed: () {/* ... */},
-  //                     ),
-  //                     const SizedBox(width: 8),
-  //
-  //                   ],
-  //                 ),
-  //               ],
-  //             ),
-  //           );
-  //         }, // itemBuilder
-  //       );
-  //     }, // Builder
-  //   );
-  // }
-
-  //search bar with profile button
-  Widget buildFloatingSearchBar() {
-    TextEditingController _searchQuery = new TextEditingController();
-
-    final isPortrait =
-        MediaQuery.of(context).orientation == Orientation.portrait;
-
-    return FloatingSearchBar(
-      hint: 'Search Item...',
-      scrollPadding: const EdgeInsets.only(top: 10, bottom: 56, left: 10, right: 10),
-      transitionDuration: const Duration(milliseconds: 800),
-      transitionCurve: Curves.easeInOut,
-      physics: const BouncingScrollPhysics(),
-      axisAlignment: isPortrait ? 0.0 : -1.0,
-      openAxisAlignment: 0.0,
-      width: isPortrait ? 600 : 500,
-      borderRadius: BorderRadius.circular(30),
-      debounceDelay: const Duration(milliseconds: 500),
-      //automaticallyImplyDrawerHamburger: true,
-      closeOnBackdropTap: true,
-      //automaticallyImplyBackButton: false,
-      onQueryChanged: (query) {
-        _searchQuery.text = query;
-      },
-
-      onSubmitted: (query) {
-        // setState(() {
-        //   items = FirebaseFirestore.instance.collection("Items").where('ItemName', arrayContains: _searchQuery).snapshots();
-        // });
-        print(_searchQuery.text);
-      },
-      // Specify a custom transition to be used for
-      // animating between opened and closed stated.
-      transition: SlideFadeFloatingSearchBarTransition(),
-      actions: [
-        FloatingSearchBarAction(
-          // HOME icon showed when search is closed
-          showIfOpened: false,
-          child: CircularButton(
-            icon: const Icon(Icons.house_rounded),
-
-            onPressed: () { /* ..Go to HOME page.. */ },
-          ),
-        ),
-        FloatingSearchBarAction.searchToClear(
-          //clears search when search bar is closed
-          showIfClosed: false,
-        ),
-      ],
-      // List of search results shown below search bar
-      builder: (context, transition) {
-        return
-        ClipRRect(
-          borderRadius: BorderRadius.circular(8),
-          child: Material(
-            color: Colors.white,
-            elevation: 4.0,
+    return Container(
+      // padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+      height: 230,
+      width: 350,
+      child: Card(
+        elevation: 4.0,
+        child: InkWell(
+          onTap: () {},
+          child: Padding(
+            padding: const EdgeInsets.all(0.0),
             child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: Colors.accents.map((color) {
-                return Container(height: 50, color: color, child: Text(_searchQuery.text),);
-              }).toList(),
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  height: 150,
+                  width: 350,
+                  child: Image.network(_image,
+                  fit: BoxFit.cover),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    // Item name and price
+                    Expanded(
+                      child: ListTile(
+                        title: Text(_item),
+                        subtitle: Text(_price.toString()),
+                      ),
+                    ),
+                    // BUY button
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Container(
+                          margin: const EdgeInsets.only(top: 15),
+                          child: TextButton(
+                            child: const Text('VIEW'),
+                            onPressed: () {
+                              // Navigator.push(
+                              //     context, MaterialPageRoute(builder: (context) => ItemPage(item: data.docs[index])));
+                            },
+                          ),
+                        ),
+                        //const SizedBox(width: 4),
+                      ],
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
-        );
-      },
+        ),
+      ),
     );
+
   }
 }
+
+
 
