@@ -533,34 +533,45 @@ class _MarketplaceState extends State<MarketplaceTab> {
     final _price = document.get('Price');
 
     return Container(
+      // padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+      height: 90,
+      width: 350,
       child: Card(
         elevation: 4.0,
         child: InkWell(
           onTap: () {},
           child: Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(0.0),
             child: Column(
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: ListTile(
-                    title: Text(_item),
-                    subtitle: Text(_price.toString()),
-                  ),
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    // Item name and price
+                    Expanded(
+                      child: ListTile(
+                        title: Text(_item),
+                        subtitle: Text(_price.toString()),
+                      ),
+                    ),
+                    // BUY button
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Container(
+                          margin: const EdgeInsets.only(top: 8),
+                          child: TextButton(
+                            child: const Text('BUY'),
+                            onPressed: () {/* ... */},
+                          ),
+                        ),
+                        //const SizedBox(width: 4),
+                      ],
+                    ),
+                  ],
                 ),
-                // Padding(
-                //   padding: const EdgeInsets.all(8.0),
-                //   child: Row(
-                //     mainAxisAlignment: MainAxisAlignment.end,
-                //     children: <Widget>[
-                //       TextButton(
-                //         child: const Text('BUY'),
-                //         onPressed: () {/* ... */},
-                //       ),
-                //       const SizedBox(width: 8),
-                //     ],
-                //   ),
-                // ),
               ],
             ),
           ),
