@@ -531,10 +531,11 @@ class _MarketplaceState extends State<MarketplaceTab> {
   Widget buildCard(BuildContext context, DocumentSnapshot document){
     final _item = document.get('ItemName');
     final _price = document.get('Price');
+    final _image = document.get('imageURL');
 
     return Container(
       // padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
-      height: 90,
+      height: 230,
       width: 350,
       child: Card(
         elevation: 4.0,
@@ -545,6 +546,12 @@ class _MarketplaceState extends State<MarketplaceTab> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Container(
+                  height: 150,
+                  width: 350,
+                  child: Image.network(_image,
+                  fit: BoxFit.cover),
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -561,7 +568,7 @@ class _MarketplaceState extends State<MarketplaceTab> {
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Container(
-                          margin: const EdgeInsets.only(top: 8),
+                          margin: const EdgeInsets.only(top: 15),
                           child: TextButton(
                             child: const Text('BUY'),
                             onPressed: () {/* ... */},
