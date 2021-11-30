@@ -124,22 +124,34 @@ class _MarketplaceState extends State<MarketplaceTab> {
 
     return Scaffold(
       extendBodyBehindAppBar: true,
+      //backgroundColor: Colors.white30,
       appBar: AppBar(
         elevation: 0.0,
         backgroundColor: Colors.transparent,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: Colors.black,),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
+        leading: Padding(
+          padding:  const EdgeInsets.only(left:20),
+          child: IconButton(
+            icon: const Icon(Icons.arrow_back_ios, color: Colors.black,),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
         ),
         titleSpacing: 0,
-        title: Card(
-          elevation: 0.0,
-          child: TextField(
-            controller: _searchController,
-            decoration: const InputDecoration(
+        title: Padding(
+          padding: const EdgeInsets.only(right:20),
+          child: Card(
+            elevation: 5.0,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(30.0),
+            ),
+            child: TextField(
+              controller: _searchController,
+              decoration: const InputDecoration(
+                border: InputBorder.none,
+                  contentPadding: EdgeInsets.only(top:14),
                 prefixIcon: Icon(Icons.search), hintText: 'Search...'),
+            ),
           ),
         ),
 
@@ -310,6 +322,7 @@ class _MarketplaceState extends State<MarketplaceTab> {
                     ]
                 ),
 
+                // Item cards
                 Flexible(
                   child: MediaQuery.removePadding(
                     context: context,
