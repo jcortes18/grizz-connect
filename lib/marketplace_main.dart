@@ -321,7 +321,7 @@ class _MarketplaceState extends State<MarketplaceTab> {
 
                 ] // Column Children
               ),
-    
+
         ),
 
       ]),
@@ -386,7 +386,10 @@ class _MarketplaceState extends State<MarketplaceTab> {
                           margin: const EdgeInsets.only(top: 15),
                           child: TextButton(
                             child: const Text('VIEW'),
-                            onPressed: () {/* ... */},
+                            onPressed: () {
+                              // Navigator.push(
+                              //     context, MaterialPageRoute(builder: (context) => ItemPage(item: data.docs[index])));
+                            },
                           ),
                         ),
                         //const SizedBox(width: 4),
