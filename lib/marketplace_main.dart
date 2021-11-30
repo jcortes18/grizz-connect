@@ -20,21 +20,6 @@ class _MarketplaceState extends State<MarketplaceTab> {
   List _allResults = [];
   List _resultsList = [];
   int selectedPage = 0;
-  // ** pages options for bottom navigation bar **
-  // _onTap() {
-  //   Navigator.of(context).push(MaterialPageRoute(
-  //       builder: (BuildContext context) => _pageOptions[selectedPage]));
-  // }
-  // final _pageOptions = [
-  //   //otherPage(), // right button
-  //   //otherPage(), // middle button
-  //   //otherPage(), // left button
-  // ];
-
-
-  // final Stream<QuerySnapshot> items = FirebaseFirestore.instance.collection("Items").where("Category", isEqualTo: _filterButtonSelection).snapshots();
-  //late Stream<QuerySnapshot> items;
-
 
   @override
   void initState() {
@@ -117,9 +102,6 @@ class _MarketplaceState extends State<MarketplaceTab> {
 
   @override
   Widget build(BuildContext context) {
-    // final FirebaseAuth _auth = FirebaseAuth.instance;
-    // final user = _auth.currentUser;
-    // final userid = user!.uid.toString();
     final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
 
     return Scaffold(
@@ -333,153 +315,15 @@ class _MarketplaceState extends State<MarketplaceTab> {
                       itemCount: _resultsList.length,
                       itemBuilder: (BuildContext context, int index) =>
                           buildCard(context, _resultsList[index]),
-
                     ),
                   ),
                   ),
-              //   Item cards column
-              //   Flexible(
-              //     child: StreamBuilder<QuerySnapshot> (
-              //     stream: items,
-              //     builder: (
-              //         BuildContext context,
-              //         AsyncSnapshot<QuerySnapshot> snapshot,
-              //         ){
-              //             if(snapshot.hasError){
-              //               return Text("Something went wrong");
-              //             }
-              //             if(snapshot.connectionState == ConnectionState.waiting){
-              //               return Text("Loading...");
-              //             }
-              //
-              //             final data = snapshot.requireData;
-              //
-              //             return MediaQuery.removePadding(
-              //               context: context,
-              //               removeTop: true,
-              //               child: ListView.builder(
-              //                   physics: NeverScrollableScrollPhysics(),
-              //                   itemBuilder: (context, index){
-              //                     return Card(
-              //                       elevation: 4.0,
-              //                       child: Column(
-              //                         mainAxisSize: MainAxisSize.min,
-              //                         children: <Widget>[
-              //                           ListTile(
-              //                             title: Text(data.docs[index]['ItemName']),
-              //                             subtitle: Text(data.docs[index]['Price'].toString()),
-              //                           ),
-              //                           Row(
-              //                             mainAxisAlignment: MainAxisAlignment.end,
-              //                             children: <Widget>[
-              //                               TextButton(
-              //                                 child: const Text('BUY'),
-              //                                 onPressed: () {/* ... */},
-              //                               ),
-              //                               const SizedBox(width: 8),
-              //                             ],
-              //                           ),
-              //                         ],
-              //                       ),
-              //                     );
-              //                   },
-              //                 shrinkWrap: true,
-              //                 itemCount: data.size,
-              //               ),
-              //             );
-              //          },
-              //   ),
-              // ),
 
                 ] // Column Children
               ),
-        //]
+    
         ),
-        //buildFloatingSearchBar(),
-        // FloatingSearchBar(
-        //   hint: 'Search Item...',
-        //   scrollPadding: const EdgeInsets.only(top: 10, bottom: 56, left: 10, right: 10),
-        //   transitionDuration: const Duration(milliseconds: 800),
-        //   transitionCurve: Curves.easeInOut,
-        //   physics: const BouncingScrollPhysics(),
-        //   axisAlignment: isPortrait ? 0.0 : -1.0,
-        //   openAxisAlignment: 0.0,
-        //   width: isPortrait ? 600 : 500,
-        //   borderRadius: BorderRadius.circular(30),
-        //   debounceDelay: const Duration(milliseconds: 500),
-        //   //automaticallyImplyDrawerHamburger: true,
-        //   closeOnBackdropTap: true,
-        //   //automaticallyImplyBackButton: false,
-        //   // Specify a custom transition to be used for animating between opened and closed stated.
-        //   transition: SlideFadeFloatingSearchBarTransition(),
-        //   actions: [
-        //     FloatingSearchBarAction(
-        //       // HOME icon showed when search is closed
-        //       showIfOpened: false,
-        //       child: CircularButton(
-        //         icon: const Icon(Icons.house_rounded),
-        //
-        //         onPressed: () { /* ..Go to HOME page.. */ },
-        //       ),
-        //     ),
-        //     FloatingSearchBarAction.searchToClear(
-        //       //clears search when search bar is closed
-        //       showIfClosed: false,
-        //     ),
-        //   ],
-        //   onQueryChanged: (query) {
-        //     _searchQuery.text = query;
-        //   },
-        //   // clicking search button
-        //   onSubmitted: (query) {
-        //     setState(() {
-        //       items = FirebaseFirestore.instance.collection("Items").where('ItemName', arrayContains: _searchQuery).snapshots();
-        //     });
-        //     //print(_searchQuery.text);
-        //   },
-        //
-        //   builder: (context, snapshot) {
-        //     // setState(() {
-        //     //   items = FirebaseFirestore.instance.collection("Items").where('ItemName', arrayContains: _searchQuery.text).snapshots();
-        //     // });
-        //
-        //     // return StreamBuilder<QuerySnapshot> (
-        //     //   stream: items,
-        //     //   builder: (
-        //     //       BuildContext context,
-        //     //       AsyncSnapshot<QuerySnapshot> snapshot,
-        //     //       ){
-        //     //     if(snapshot.hasError){
-        //     //       return Text("Something went wrong");
-        //     //     }
-        //     //     if(snapshot.connectionState == ConnectionState.waiting){
-        //     //       return Text("Loading...");
-        //     //     }
-        //     //
-        //     //     final data1 = snapshot.requireData;
-        //     //
-        //     //     return ListView.builder(
-        //     //       //scrollDirection: Axis.vertical,
-        //     //       //physics: ScrollPhysics(),
-        //     //       //physics: NeverScrollableScrollPhysics(),
-        //     //       itemBuilder: (context, index){
-        //     //         return Column(
-        //     //           mainAxisSize: MainAxisSize.min,
-        //     //           children: <Widget>[
-        //     //             ListTile(
-        //     //               title: Text(data1.docs[index]['ItemName']),
-        //     //             ),
-        //     //           ],
-        //     //         );
-        //     //       },
-        //     //       shrinkWrap: true,
-        //     //       itemCount: data1.size,
-        //     //     );
-        //     //   },
-        //     // );
-        //
-        //   },
-        // ),
+
       ]),
 
       // Floating '+' button
@@ -497,35 +341,6 @@ class _MarketplaceState extends State<MarketplaceTab> {
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-
-      // Bottom Navigation Bar
-      //extendBody: true, //show body behind nav bar
-      // bottomNavigationBar: Padding(
-      //     padding: const EdgeInsets.only(top: 0, bottom: 10),
-      //     child: DotNavigationBar(
-      //       backgroundColor: Colors.black,
-      //       dotIndicatorColor: Colors.white,
-      //       unselectedItemColor: Colors.grey[300],
-      //       selectedItemColor: Colors.amber,
-      //       items: [
-      //         DotNavigationBarItem(
-      //           icon: const Icon(Icons.sell),
-      //         ),
-      //         DotNavigationBarItem(
-      //           icon: const Icon(Icons.health_and_safety),
-      //         ),
-      //         DotNavigationBarItem(
-      //           icon: const Icon(Icons.settings),
-      //         ),
-      //       ],
-      //       currentIndex: selectedPage,
-      //       onTap: (index) {
-      //         setState(() {
-      //           selectedPage = index;
-      //         });
-      //         _onTap();
-      //       },
-      //     )),
     );
   }
   Widget buildCard(BuildContext context, DocumentSnapshot document){
