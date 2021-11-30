@@ -5,6 +5,8 @@ import 'package:grizz_connect/upload.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'package:flutter/material.dart';
 
+import 'item.dart';
+
 class MarketplaceTab extends StatefulWidget {
   const MarketplaceTab({Key? key}) : super(key: key);
 
