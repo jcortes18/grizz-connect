@@ -1,7 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 import 'database.dart';
 
 
@@ -77,8 +77,12 @@ class _ItemPageState extends State<ItemPage> {
                   FloatingActionButton.extended(
                     onPressed: () async { //showDialog(context: context, builder: (context) {
                       //return AlertDialog(content: Text(myController.text),);
+                      final FirebaseAuth _auth = FirebaseAuth.instance;
+                      final user = _auth.currentUser;
+                      final userid = user!.uid.toString();
+
                       await DatabaseService(uid: widget.item.id).updateComments(
-                          comment); myController.clear();
+                          comment, user!.displayName.toString(), user!.email.toString()); myController.clear();
                     },
                     label: const Text('Add Comment'),
                     icon: const Icon(Icons.add_comment),
@@ -100,7 +104,8 @@ class _ItemPageState extends State<ItemPage> {
                               shrinkWrap: true,
                               children: snapshot.data!.docs.map((doc) {
                                 return Card(child: ListTile(
-                                  title: Text(doc['comment']),
+                                  //title: Text(user!.email.toString()),
+                                  title: Text(doc['name'] + "\t-\t" + "(" + doc['email'] + ")"),
                                   subtitle: Text(doc['comment']),),);
                               }).toList(),
                             );
@@ -136,18 +141,14 @@ class _ItemPageState extends State<ItemPage> {
     ],
   ),
 );
-
 // **CODE FOR PICTURES FOR CAROUSEL** //
-
 final List<String> imgList = [
   'https://images.unsplash.com/photo-1519985176271-adb1088fa94c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=a0c8d632e977f94e5d312d9893258f59&auto=format&fit=crop&w=1355&q=80',
   'https://images.unsplash.com/photo-1519985176271-adb1088fa94c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=a0c8d632e977f94e5d312d9893258f59&auto=format&fit=crop&w=1355&q=80',
   'https://images.unsplash.com/photo-1519985176271-adb1088fa94c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=a0c8d632e977f94e5d312d9893258f59&auto=format&fit=crop&w=1355&q=80',
   'https://images.unsplash.com/photo-1519985176271-adb1088fa94c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=a0c8d632e977f94e5d312d9893258f59&auto=format&fit=crop&w=1355&q=80'
 ];
-
 // **CODE FOR CAROUSEL** //
-
 Widget carousel(context){
   return SizedBox(
       width: MediaQuery.of(context).size.width,

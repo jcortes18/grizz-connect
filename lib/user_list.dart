@@ -51,6 +51,7 @@ class _profileInfoState extends State<profileInfo> {
         records = [doc.get('displayName'),
                    doc.get('major'),
                    doc.get('standing')];
+        user.updateDisplayName(doc.get('displayName'));
         userName = records[0];
         major = records[1];
         standing = records[2];
@@ -58,6 +59,9 @@ class _profileInfoState extends State<profileInfo> {
         //print(doc.data()); //get all data as a set
       }
     }
+
+
+
     //for(int i = 0; i<records.length; i++) {
     //  print(records[i]);
     //}

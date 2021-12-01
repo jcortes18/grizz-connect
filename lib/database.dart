@@ -18,7 +18,7 @@ class DatabaseService {
     });
   }
 
-  Future updateComments(String comment) async {
+  Future updateComments(String comment, name, email) async {
     final snapShot = await FirebaseFirestore.instance
         .collection('comments')
         .doc(uid)
@@ -30,11 +30,15 @@ class DatabaseService {
       });
       return await comments.doc(uid).collection("comments").doc().set({
         'comment': comment,
+        'name' : name,
+        'email' : email,
       });
     }
     else {
       return await comments.doc(uid).collection("comments").doc().set({
         'comment': comment,
+        'name' : name,
+        'email' : email,
       });
     }
   }
