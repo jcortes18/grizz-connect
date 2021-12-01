@@ -358,8 +358,8 @@ class _MarketplaceState extends State<MarketplaceTab> {
         elevation: 4.0,
         child: InkWell(
           onTap: () {
-            // Navigator.push(
-            //     context, MaterialPageRoute(builder: (context) => ItemPage(item: data.docs[index])));
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => ItemPage(item: document)));
           },
           child: Padding(
             padding: const EdgeInsets.all(0.0),
