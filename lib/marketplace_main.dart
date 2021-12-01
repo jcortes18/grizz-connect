@@ -357,7 +357,10 @@ class _MarketplaceState extends State<MarketplaceTab> {
       child: Card(
         elevation: 4.0,
         child: InkWell(
-          onTap: () {},
+          onTap: () {
+            // Navigator.push(
+            // context, MaterialPageRoute(builder: (context) => ItemPage(item: data.docs[index])));
+          },
           child: Padding(
             padding: const EdgeInsets.all(0.0),
             child: Column(
@@ -389,8 +392,7 @@ class _MarketplaceState extends State<MarketplaceTab> {
                           child: TextButton(
                             child: const Text('VIEW'),
                             onPressed: () {
-                              // Navigator.push(
-                              //     context, MaterialPageRoute(builder: (context) => ItemPage(item: data.docs[index])));
+                              // handled by Inkwell onTap()
                             },
                           ),
                         ),
