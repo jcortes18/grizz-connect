@@ -100,7 +100,8 @@ class _ItemPageState extends State<ItemPage> {
                               shrinkWrap: true,
                               children: snapshot.data!.docs.map((doc) {
                                 return Card(child: ListTile(
-                                  title: Text(doc['comment']),),);
+                                  title: Text(doc['comment']),
+                                  subtitle: Text(doc['comment']),),);
                               }).toList(),
                             );
                           }
