@@ -82,7 +82,7 @@ class _ItemPageState extends State<ItemPage> {
                       final userid = user!.uid.toString();
 
                       await DatabaseService(uid: widget.item.id).updateComments(
-                          comment, user!.displayName.toString(), user!.email.toString()); myController.clear();
+                          comment, user.displayName.toString(), user.email.toString()); myController.clear();
                     },
                     label: const Text('Add Comment'),
                     icon: const Icon(Icons.add_comment),
