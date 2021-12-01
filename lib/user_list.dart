@@ -164,7 +164,23 @@ class _profileInfoState extends State<profileInfo> {
               style: const TextStyle(color: Colors.amberAccent, fontSize: 32),
             ),
           ),
-/*
+          Center(
+          heightFactor: 2.9,
+          child:
+          RaisedButton(
+            child: const Text("Modify my items",
+              style: TextStyle(fontSize: 25, letterSpacing: 2, color: Colors.black,
+                  fontWeight: FontWeight.w700  ),),
+            onPressed: () {
+              Navigator.pushNamed(context, 'modifylist');
+            },
+            color: Colors.amberAccent,
+            padding: const EdgeInsets.symmetric(horizontal: 29, vertical: 10),
+            elevation: 5,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            )
+          ),          
+          /*
           Container( //cont
             padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
             decoration: const BoxDecoration(
