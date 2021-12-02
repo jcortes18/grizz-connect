@@ -187,24 +187,39 @@ class _MarketplaceState extends State<MarketplaceTab> {
                   scrollDirection: Axis.horizontal,
                   child: Row(
                     children: [
-                      Column(children: [
-                        TextButton(
-                            onPressed: () {
-                              // setState(() {
-                              //   items = FirebaseFirestore.instance.collection("Items").where("Category", isEqualTo: "Books").snapshots();
-                              // });
-                              setState(() {
-                                _filterController.text = 'Books';
-                                filterResultsList();
-                              });
-                            },
-                            child: const Icon(
-                              Icons.book,
-                              color: Colors.amber,
-                              size: 100,
-                            )),
-                        const Text('Books')
-                      ]),
+                      Container(
+                        // decoration: const BoxDecoration(
+                        //     shape: BoxShape.rectangle,
+                        //     boxShadow: [
+                        //       BoxShadow(
+                        //         color: Colors.grey,
+                        //         blurRadius: 100.0,
+                        //       ),
+                        //     ]
+                        // ),
+                        child: Column(children: [
+                          TextButton(
+                              onPressed: () {
+                                // setState(() {
+                                //   items = FirebaseFirestore.instance.collection("Items").where("Category", isEqualTo: "Books").snapshots();
+                                // });
+                                setState(() {
+                                  _filterController.text = 'Books';
+                                  filterResultsList();
+                                });
+                              },
+                              child: const Icon(
+                                Icons.book,
+                                color: Colors.amber,
+                                size: 100,
+                              )
+                          ),
+                          const Text('Books',
+                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal, color: Colors.black),
+                          )
+                        ]
+                        ),
+                      ),
                       Column(children: [
                         TextButton(
                             onPressed: () {
@@ -221,7 +236,8 @@ class _MarketplaceState extends State<MarketplaceTab> {
                               color: Colors.amber,
                               size: 100,
                             )),
-                        const Text('Furniture')
+                        const Text('Furniture',
+                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal, color: Colors.black),)
                       ]),
                       Column(children: [
                         TextButton(
@@ -239,7 +255,8 @@ class _MarketplaceState extends State<MarketplaceTab> {
                               color: Colors.amber,
                               size: 100,
                             )),
-                        const Text('Electronics')
+                        const Text('Electronics',
+                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal, color: Colors.black),)
                       ]),
                       Column(children: [
                         TextButton(
@@ -257,7 +274,8 @@ class _MarketplaceState extends State<MarketplaceTab> {
                               color: Colors.amber,
                               size: 100,
                             )),
-                        const Text('Lab Kits')
+                        const Text('Lab Kits',
+                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal, color: Colors.black),)
                       ]),
                       Column(children: [
                         TextButton(
@@ -275,7 +293,8 @@ class _MarketplaceState extends State<MarketplaceTab> {
                               color: Colors.amber,
                               size: 100,
                             )),
-                        const Text('Supplies')
+                        const Text('Supplies',
+                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal, color: Colors.black),)
                       ]),
                       Column(children: [
                         TextButton(
@@ -290,25 +309,26 @@ class _MarketplaceState extends State<MarketplaceTab> {
                               color: Colors.amber,
                               size: 100,
                             )),
-                        const Text('Favorites')
+                        const Text('Favorites',
+                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal, color: Colors.black),)
                       ]),
                     ],
                   ),
                 ),
 
-                //Clear Filter button
+                //Clear Filter and refresh buttons
                 Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Column(
                         children: [
                           Padding(
                             padding: const EdgeInsets.only(top: 20.0, left: 3.5),
-                            child: OutlinedButton(
+                            child: ElevatedButton(
                               child: const Text('Clear selection'),
                               style: OutlinedButton.styleFrom(
                                 primary: Colors.black,
-                                //backgroundColor: Colors.amber,
+                                backgroundColor: Colors.amber,
                                 shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
                                 side: const BorderSide(color: Colors.amber),
                               ),
@@ -328,11 +348,11 @@ class _MarketplaceState extends State<MarketplaceTab> {
                         children: [
                           Padding(
                             padding: const EdgeInsets.only(top: 20.0, left: 3.5),
-                            child: OutlinedButton(
+                            child: ElevatedButton(
                               child: const Text('Refresh'),
                               style: OutlinedButton.styleFrom(
                                 primary: Colors.black,
-                                //backgroundColor: Colors.amber,
+                                backgroundColor: Colors.amber,
                                 shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
                                 side: const BorderSide(color: Colors.amber),
                               ),

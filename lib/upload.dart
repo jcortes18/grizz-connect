@@ -149,9 +149,11 @@ class _UploadPageState extends State<UploadItem>{
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   child: TextFormField(
                     controller: _itemNameController,
+                    keyboardType: TextInputType.text,
+                    textCapitalization: TextCapitalization.sentences,
                     // onChanged: (value){
                     //   setState(() {
-                    //     itemName = value;
+                    //     itemName = value.t;
                     //   });
                     // },
                     decoration: const InputDecoration(
