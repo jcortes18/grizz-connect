@@ -27,7 +27,7 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
-  image_picker:
+  image_picker: ^0.8.4+4
   flutter:
     sdk: flutter
 
@@ -43,6 +43,7 @@ dependencies:
   material_floating_search_bar: ^0.3.6
   firebase_storage: ^10.1.0
   firebase_database: ^8.1.0
+  file_picker: ^4.2.6
 
 dev_dependencies:
   flutter_test:
@@ -76,6 +77,11 @@ flutter:
     - Settings.png
     - Home.png
   #   - images/a_dot_ham.jpeg
+
+  fonts:
+     - family: Raleway
+       fonts:
+         - asset: fonts/Raleway-Regular.ttf
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
