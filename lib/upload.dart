@@ -26,7 +26,7 @@ class _UploadPageState extends State<UploadItem>{
   final TextEditingController _descriptionController = new TextEditingController();
   final TextEditingController _categoryController = new TextEditingController();
   final TextEditingController _imageURLController = new TextEditingController();
-
+  final TextEditingController _imageName = new TextEditingController();
 
   @override
   void dispose() {
@@ -34,7 +34,8 @@ class _UploadPageState extends State<UploadItem>{
     _itemNameController.dispose();
     _priceController.dispose();
     _descriptionController.dispose();
-    _imageURLController.dispose();
+    // _imageURLController.dispose();
+    // _imageName.dispose();
     super.dispose();
   }
 
@@ -43,6 +44,9 @@ class _UploadPageState extends State<UploadItem>{
 
   UploadTask? task;
   File? file;
+  String imageName = "";
+
+  bool viewURL = false;
 
   @override
   Widget build(BuildContext context) {
@@ -54,13 +58,15 @@ class _UploadPageState extends State<UploadItem>{
 
     Future selectFile() async {
       final result = await FilePicker.platform.pickFiles(allowMultiple: false);
-
       if (result == null) return;
 
       final path = result.files.single.path!;
+      imageName =  result.files.single.name;
 
       setState(() => file = File(path));
+      print("file is ..");
       print(file);
+      return imageName.toString();
     }
 
     // Future uploadFile() async {
@@ -100,14 +106,10 @@ class _UploadPageState extends State<UploadItem>{
       if (task == null) return;
       final snapshot = await task!.whenComplete(() {});
       final url = await snapshot.ref.getDownloadURL();
-      // setState(() {
-      //   _imageURLController.text = url.toString();
-      // });
+
       _imageURLController.text = url.toString();
       print('Download-Link:');
       print(_imageURLController.text);
-
-      //didChangeDependencies();
 
       return items.add({
         'ItemName': _itemNameController.text,
@@ -252,15 +254,28 @@ class _UploadPageState extends State<UploadItem>{
                         child: const Text('Add'),
                         style: OutlinedButton.styleFrom(
                           primary: Colors.black,
-                          //backgroundColor: Colors.amber,
                           shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
                           side: const BorderSide(color: Colors.amber),
                         ),
-                        onPressed:
-                          selectFile,
-                      ),
+                        onPressed: () async {
+                          var name = await selectFile();
+                          print("image name is ..");
+                          print(name);
+                          _imageName.text = name;
+
+                        }),
                     ],
-                  ),),
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(''+_imageName.text+'',
+                        style: const TextStyle(
+                            color: Colors.black, fontSize: 15.0,
+                            fontWeight: FontWeight.w700)),
+                  ],
+                ),
                 // Enter Button
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
@@ -276,7 +291,7 @@ class _UploadPageState extends State<UploadItem>{
                         ),
                       ),
                       onPressed: () {
-                        if (_itemNameController.text.isEmpty || _descriptionController.text.isEmpty || _priceController.text.isEmpty || dropdownValue.isEmpty) {
+                        if (_itemNameController.text.isEmpty || _descriptionController.text.isEmpty || _priceController.text.isEmpty || dropdownValue.isEmpty || _imageName.text.isEmpty) {
                           setState(() => error = ' All fields required ');
                         }
                         else{
