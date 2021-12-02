@@ -19,12 +19,10 @@ class _MarketplaceState extends State<MarketplaceTab> {
   late Future resultsLoaded;
   List _allResults = [];
   List _resultsList = [];
-  int selectedPage = 0;
 
   @override
   void initState() {
     super.initState();
-    //items = FirebaseFirestore.instance.collection("Items").snapshots();
     _searchController.addListener(_onSearchChanged);
   }
 
@@ -96,9 +94,29 @@ class _MarketplaceState extends State<MarketplaceTab> {
     setState(() {
       _allResults = data.docs;
     });
+    print(_allResults);
     searchResultsList();
     return "complete";
   }
+
+  // getItemsStreamSnapshots() async {
+  //   final FirebaseAuth _auth = FirebaseAuth.instance;
+  //   final user = _auth.currentUser;
+  //   final userid = user!.uid.toString();
+  //
+  //   var collection = FirebaseFirestore.instance.collection('Items');
+  //   collection.snapshots().listen((querySnapshot) {
+  //     print(querySnapshot.docs);
+  //      setState(() {
+  //            _allResults = querySnapshot.docs;
+  //          });
+  //      print("hello");
+  //     print(_allResults);
+  //   });
+  //
+  //   searchResultsList();
+  //   return "complete";
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -106,7 +124,7 @@ class _MarketplaceState extends State<MarketplaceTab> {
 
     return Scaffold(
       extendBodyBehindAppBar: true,
-      //backgroundColor: Colors.white30,
+      //backgroundColor: Colors.white70,
       appBar: AppBar(
         elevation: 0.0,
         backgroundColor: Colors.transparent,
@@ -282,24 +300,50 @@ class _MarketplaceState extends State<MarketplaceTab> {
                 Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.only(top: 20.0, left: 3.5),
-                        child: OutlinedButton(
-                          child: const Text('Clear selection'),
-                          style: OutlinedButton.styleFrom(
-                            primary: Colors.black,
-                            //backgroundColor: Colors.amber,
-                            shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
-                            side: const BorderSide(color: Colors.amber),
+                      Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(top: 20.0, left: 3.5),
+                            child: OutlinedButton(
+                              child: const Text('Clear selection'),
+                              style: OutlinedButton.styleFrom(
+                                primary: Colors.black,
+                                //backgroundColor: Colors.amber,
+                                shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
+                                side: const BorderSide(color: Colors.amber),
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  _searchController.clear();
+                                  _filterController.clear();
+                                  filterResultsList();
+                                  //getItemsStreamSnapshots();
+                                });
+                              },
+                            ),
                           ),
-                          onPressed: () {
-                            setState(() {
-                              _searchController.clear();
-                              _filterController.clear();
-                              filterResultsList();
-                            });
-                          },
-                        ),
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(top: 20.0, left: 3.5),
+                            child: OutlinedButton(
+                              child: const Text('Refresh'),
+                              style: OutlinedButton.styleFrom(
+                                primary: Colors.black,
+                                //backgroundColor: Colors.amber,
+                                shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
+                                side: const BorderSide(color: Colors.amber),
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  getItemsStreamSnapshots();
+                                });
+                              },
+                            ),
+                          ),
+                        ],
                       ),
                     ]
                 ),
@@ -333,7 +377,8 @@ class _MarketplaceState extends State<MarketplaceTab> {
         child: FloatingActionButton(
           onPressed: () {
             Navigator.push(
-                context, MaterialPageRoute(builder: (context) => UploadItem()));
+                context, MaterialPageRoute(builder: (context) => UploadItem())
+            );
           },
           child: const Icon(Icons.add, color: Colors.black,),
           backgroundColor: Colors.amber,
@@ -383,16 +428,13 @@ class _MarketplaceState extends State<MarketplaceTab> {
                     ),
                     // BUY button
                     Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Container(
-                          margin: const EdgeInsets.only(top: 15),
-                          child: TextButton(
-                            child: const Text('VIEW'),
-                            onPressed: () {
-                              // handled by Inkwell onTap()
-                            },
-                          ),
+                          margin: const EdgeInsets.only(top: 28, right: 15),
+                          child:  const Text('VIEW',
+                            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.blue),),
                         ),
                         //const SizedBox(width: 4),
                       ],
