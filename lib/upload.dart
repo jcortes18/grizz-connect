@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -173,6 +172,8 @@ class _UploadPageState extends State<UploadItem>{
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   child: TextFormField(
                     controller: _priceController,
+                     keyboardType: TextInputType.number,
+                      inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly],
                     // onChanged: (value){
                     //   setState(() {
                     //      //price = value as double;
@@ -184,7 +185,7 @@ class _UploadPageState extends State<UploadItem>{
                         borderSide: BorderSide(color: Colors.amber),
                       ),
                       border: OutlineInputBorder(),
-                      labelText: 'Price',
+                      labelText: 'Price (Must be in Numbers)',
                     ),
                   ),
                 ),
