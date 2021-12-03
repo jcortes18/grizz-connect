@@ -17,6 +17,8 @@ class _ItemPageState extends State<ItemPage> {
   final myController = TextEditingController();
   String comment = '';
 
+  String error='';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,6 +36,10 @@ class _ItemPageState extends State<ItemPage> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
                   //carousel(context),
+                  //((widget.item['imageURL']!=null)?Image.network(widget.item['imageURL'],fit: BoxFit.fill)
+                    //:
+                  //Icon(Icons.person_rounded, color: Colors.white, size: MediaQuery.of(context).size.width * .4,),
+                  //Image.network("https://upload.wikimedia.org/wikipedia/commons/6/6b/Picture_icon_BLACK.svg"),
                   Image.network(widget.item['imageURL']),
                   Card(color: const Color.fromRGBO(201, 199, 199, 1.0),
                       child: ListTile(title: Text(
@@ -53,6 +59,12 @@ class _ItemPageState extends State<ItemPage> {
                           textAlign: TextAlign.center,
                           style: const TextStyle(
                               fontWeight: FontWeight.bold)),)),
+                  const SizedBox(height: 5.0),
+                  Text(''+error+'',
+                      style: const TextStyle(//height: 0,
+                          color: Colors.red, fontSize: 25.0, //backgroundColor: Colors.transparent,
+                          fontWeight: FontWeight.w700)
+                  ),
                   TextFormField(validator: (val) {
 
                     if (val!.isNotEmpty) {
@@ -62,6 +74,7 @@ class _ItemPageState extends State<ItemPage> {
                       //validator: (val) => val.length > 5 ? 'Enter an email': 'null';
                       setState(() => comment = val);
                     },
+
                     controller: myController,
                     decoration: InputDecoration(
                         border: OutlineInputBorder(
@@ -80,10 +93,27 @@ class _ItemPageState extends State<ItemPage> {
                       final FirebaseAuth _auth = FirebaseAuth.instance;
                       final user = _auth.currentUser;
                       final userid = user!.uid.toString();
+                      if(comment.length < 1){
+                       setState(() {
+                         error = 'short comment';
+                       });
+                      }
 
-                      await DatabaseService(uid: widget.item.id).updateComments(
-                          comment, user.displayName.toString(), user.email.toString()); myController.clear();
-                    },
+                      else {
+                        setState(() {
+                          error = '';
+                        });
+                        await DatabaseService(uid: widget.item.id)
+                            .updateComments(
+                            comment, user.displayName.toString(),
+                            user.email.toString());
+                        myController.clear();
+                      }
+                      setState(() {
+                        comment = '';
+                      });
+                          },
+
                     label: const Text('Add Comment'),
                     icon: const Icon(Icons.add_comment),
                     //.thumb_up),
@@ -113,62 +143,24 @@ class _ItemPageState extends State<ItemPage> {
                         }
                     ),
                   ),
+
                 ])
         )
+
     );
   }
 }
+/*
+Navigator.push(
+context, MaterialPageRoute(builder: (context) => ItemPage(item: data.docs[index])));
 
+*/
 
-
-// **CODE FOR CUSTOM APP BAR** //
-
-/*_appBar(context, height) => PreferredSize(
-  preferredSize: Size(MediaQuery.of(context).size.width, height+60),
-  child: Row(
-    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    children: <Widget>[
-      FloatingActionButton(elevation: 0, child:Image.asset("assets/back_button.png", width: 27, height: 30,),
-          onPressed: (){},
-          backgroundColor: Colors.transparent
-      ),
-      const Center(child: Text("GrizzConnet", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Color.fromRGBO(255, 193, 8, 1.0)),),
-      ),
-      FloatingActionButton(elevation: 0, child:Image.asset("assets/bag_button.png", width: 40, height: 40,),
-          onPressed: (){},
-          backgroundColor: Colors.transparent
-      ),
-    ],
-  ),
-);
-// **CODE FOR PICTURES FOR CAROUSEL** //
-final List<String> imgList = [
-  'https://images.unsplash.com/photo-1519985176271-adb1088fa94c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=a0c8d632e977f94e5d312d9893258f59&auto=format&fit=crop&w=1355&q=80',
-  'https://images.unsplash.com/photo-1519985176271-adb1088fa94c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=a0c8d632e977f94e5d312d9893258f59&auto=format&fit=crop&w=1355&q=80',
-  'https://images.unsplash.com/photo-1519985176271-adb1088fa94c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=a0c8d632e977f94e5d312d9893258f59&auto=format&fit=crop&w=1355&q=80',
-  'https://images.unsplash.com/photo-1519985176271-adb1088fa94c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=a0c8d632e977f94e5d312d9893258f59&auto=format&fit=crop&w=1355&q=80'
-];
-// **CODE FOR CAROUSEL** //
-Widget carousel(context){
-  return SizedBox(
-      width: MediaQuery.of(context).size.width,
-      child: CarouselSlider(
-        options: CarouselOptions(
-            enlargeCenterPage: true,
-            enableInfiniteScroll: true
-        ),
-        items: imgList.map((i) => ClipRRect(
-            borderRadius: BorderRadius.circular(8),
-            child: Stack(
-                fit: StackFit.expand,
-                children: <Widget>[
-                  Image.network(i,
-                    width: 1050,
-                    height: 350,
-                    fit: BoxFit.cover,)
-                ]
-            )
-        )).toList(),
-      )
-  );
-}*/
+/*
+child: CircularButton(
+icon: const Icon(Icons.house_rounded, size: 32,
+),
+onPressed: () {
+Navigator.pushNamed(context, 'welcome');
+},
+),*/
