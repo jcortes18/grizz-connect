@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'database.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 
 class ItemPage extends StatefulWidget {
@@ -53,6 +54,54 @@ class _ItemPageState extends State<ItemPage> {
                           textAlign: TextAlign.center,
                           style: const TextStyle(
                               fontWeight: FontWeight.bold)),)),
+
+                  Row(
+                      children: <Widget> [
+                      Expanded(
+                          child: TextButton(
+                            onPressed: () async{
+                                  var url = "https://venmo.com";
+                                  if (await launch(url)) {
+                                       await launch(url);
+                                   } else {
+                                        throw 'Could not launch $url';
+                                      }}, child: Image.asset('Venmo.jpg', height: 60, width: 60),),
+                                ),
+                      Expanded(
+                          child: TextButton(
+                           onPressed: () async{
+                             var url = "https://www.paypal.com/us/home";
+                             if (await launch(url)) {
+                               await launch(url);
+                             } else {
+                               throw 'Could not launch $url';
+                             }}, child: Image.asset('PayPal.png', height: 60, width: 60),),
+                      ),
+                         Expanded(
+                        child: TextButton(
+                              onPressed: () async{
+                                var url = "https://www.zellepay.com";
+                                if (await launch(url)) {
+                                  await launch(url);
+                                } else {
+                                  throw 'Could not launch $url';
+                                }}, child: Image.asset('Zelle.png', height: 60, width: 60),),
+                         ),]),
+
+                  /*FloatingActionButton(child: const CircleAvatar(
+                    radius: 50,
+                    backgroundImage: AssetImage("Venmo.jpg",
+                      ),
+                      ),
+                      onPressed: () async{
+                      var url = "https://venmo.com";
+                      if (await launch(url)) {
+                        await launch(url);
+                      } else {
+                         throw 'Could not launch $url';
+                        }
+                                  }
+                            ),*/
                   TextFormField(validator: (val) {
 
                     if (val!.isNotEmpty) {
