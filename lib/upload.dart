@@ -10,6 +10,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/services.dart';
 import 'package:path/path.dart';
 import 'package:grizz_connect/firebase_api.dart';
+import 'package:intl/intl.dart';
 
 import 'package:grizz_connect/marketplace_main.dart';
 
@@ -112,8 +113,8 @@ class _UploadPageState extends State<UploadItem>{
       print(_imageURLController.text);
 
       return items.add({
-        'ItemName': _itemNameController.text,
-        'Description': _descriptionController.text,
+        'ItemName': toBeginningOfSentenceCase(_itemNameController.text),
+        'Description': toBeginningOfSentenceCase(_descriptionController.text),
         'Price': _priceController.text,
         'Category': _categoryController.text,
         'imageURL': _imageURLController.text,
@@ -123,10 +124,9 @@ class _UploadPageState extends State<UploadItem>{
           // .catchError((error) => print("Failed to add: $error"));
 
           .then((value) => setState(() {
-          _addedItem = true;
-          print("Item Added");
-          })
-          )
+            _addedItem = true;
+            print("Item Added");
+          }))
           .catchError((error) => print("Failed to add: $error"));
     }
 

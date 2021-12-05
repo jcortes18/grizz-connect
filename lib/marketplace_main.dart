@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:grizz_connect/upload.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_scroll_to_top/flutter_scroll_to_top.dart';
 
 import 'item.dart';
 
@@ -31,9 +30,9 @@ class _MarketplaceState extends State<MarketplaceTab> {
     _scrollController.addListener(() {
         setState(() {
           if (_scrollController.offset >= 400) {
-            _showBackToTopButton = true; // show the back-to-top button
+            _showBackToTopButton = true;
           } else {
-            _showBackToTopButton = false; // hide the back-to-top button
+            _showBackToTopButton = false;
           }
         });
       });
@@ -102,15 +101,37 @@ class _MarketplaceState extends State<MarketplaceTab> {
     final user = _auth.currentUser;
     final userid = user!.uid.toString();
 
-    var data = await FirebaseFirestore.instance
-        .collection('Items')
-        .get();
-    setState(() {
-      _allResults = data.docs;
-    });
-    print(_allResults);
-    searchResultsList();
-    return "complete";
+    try{
+      var data = await FirebaseFirestore.instance
+          .collection('Items')
+          .get();
+
+      setState(() {
+        _allResults = data.docs;
+      });
+
+      print(_allResults);
+      print("Retrieved items");
+
+      searchResultsList();
+      return "complete";
+
+    }catch(error){
+      print(error);
+      showDialog<String>(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+          title: const Text('Could not retrieve items. Try again!'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.of(context),
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
+    };
+
   }
 
   void _scrollToTop() {
