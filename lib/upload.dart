@@ -98,9 +98,7 @@ class _UploadPageState extends State<UploadItem>{
       if (file == null) return;
 
       final fileName = basename(file!.path);
-      print(fileName);
       final destination = 'items/$fileName';
-      print(destination);
 
       task = FirebaseApi.uploadFile(destination, file!);
       setState(() {});
@@ -121,15 +119,15 @@ class _UploadPageState extends State<UploadItem>{
         'imageURL': _imageURLController.text,
         'User': userid,
         })
-          .then((value) => print("Item Added"))
-          .catchError((error) => print("Failed to add: $error"));
-
-          // .then((value) => setState(() {
-          // _addedItem = true;
-          // print("Item Added");
-          // })
-          // )
+          // .then((value) => print(value))
           // .catchError((error) => print("Failed to add: $error"));
+
+          .then((value) => setState(() {
+          _addedItem = true;
+          print("Item Added");
+          })
+          )
+          .catchError((error) => print("Failed to add: $error"));
     }
 
     final fileName = file != null ? basename(file!.path) : 'No File Selected';
@@ -299,39 +297,41 @@ class _UploadPageState extends State<UploadItem>{
                           fontSize: 20,
                         ),
                       ),
-                      onPressed: () {
+                      onPressed: () async {
                         if (_itemNameController.text.isEmpty || _descriptionController.text.isEmpty || _priceController.text.isEmpty || dropdownValue.isEmpty || _imageName.text.isEmpty) {
                           setState(() => error = ' All fields required ');
                         }
                         else{
                           _categoryController.text = dropdownValue;
-                          addItems(); // actually adds items to firestoreDB
-                          // if(_addedItem == true){
-                          //   showDialog<String>(
-                          //     context: context,
-                          //     builder: (BuildContext context) => AlertDialog(
-                          //       title: const Text('Item Added!'),
-                          //       actions: <Widget>[
-                          //         TextButton(
-                          //           onPressed: () => Navigator.of(context).popUntil((_) => count++ >= 2),
-                          //           child: const Text('OK'),
-                          //         ),
-                          //       ],
-                          //     ),
-                          //   );
-                          // };
-                          showDialog<String>(
-                            context: context,
-                            builder: (BuildContext context) => AlertDialog(
-                              title: const Text('Item Added!'),
-                              actions: <Widget>[
-                                TextButton(
-                                  onPressed: () => Navigator.of(context).popUntil((_) => count++ >= 2),
-                                  child: const Text('OK'),
-                                ),
-                              ],
-                            ),
-                          );
+                          await addItems(); // actually adds items to firestoreDB
+                          if(_addedItem == true){
+                            showDialog<String>(
+                              context: context,
+                              builder: (BuildContext context) => AlertDialog(
+                                title: const Text('Item Added!'),
+                                actions: <Widget>[
+                                  TextButton(
+                                    onPressed: () => Navigator.of(context).popUntil((_) => count++ >= 2),
+                                    child: const Text('OK'),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }
+                          else{
+                            showDialog<String>(
+                              context: context,
+                              builder: (BuildContext context) => AlertDialog(
+                                title: const Text('Could not add item. Try again!'),
+                                actions: <Widget>[
+                                  TextButton(
+                                    onPressed: () => Navigator.of(context),
+                                    child: const Text('OK'),
+                                  ),
+                                ],
+                              ),
+                            );
+                          };
                         }
                       },
                     ),
