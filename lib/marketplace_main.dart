@@ -382,7 +382,7 @@ class _MarketplaceState extends State<MarketplaceTab> {
 
         ),
 
-        // Scroll to Top Button
+        // Floating '+' button
         Padding(
           padding: const EdgeInsets.only(bottom: 15, right: 8.0),
           child: Align(
@@ -405,7 +405,7 @@ class _MarketplaceState extends State<MarketplaceTab> {
         ),
       ]),
 
-      // Floating '+' button
+      // Scroll to Top Button
       floatingActionButton: _showBackToTopButton == false
           ? null
           : FloatingActionButton(

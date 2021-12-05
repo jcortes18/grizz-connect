@@ -28,6 +28,8 @@ class _UploadPageState extends State<UploadItem>{
   final TextEditingController _imageURLController = new TextEditingController();
   final TextEditingController _imageName = new TextEditingController();
 
+  bool _addedItem = false;
+
   @override
   void dispose() {
     // Clean up the controller when the widget is disposed.
@@ -121,6 +123,13 @@ class _UploadPageState extends State<UploadItem>{
         })
           .then((value) => print("Item Added"))
           .catchError((error) => print("Failed to add: $error"));
+
+          // .then((value) => setState(() {
+          // _addedItem = true;
+          // print("Item Added");
+          // })
+          // )
+          // .catchError((error) => print("Failed to add: $error"));
     }
 
     final fileName = file != null ? basename(file!.path) : 'No File Selected';
@@ -297,6 +306,20 @@ class _UploadPageState extends State<UploadItem>{
                         else{
                           _categoryController.text = dropdownValue;
                           addItems(); // actually adds items to firestoreDB
+                          // if(_addedItem == true){
+                          //   showDialog<String>(
+                          //     context: context,
+                          //     builder: (BuildContext context) => AlertDialog(
+                          //       title: const Text('Item Added!'),
+                          //       actions: <Widget>[
+                          //         TextButton(
+                          //           onPressed: () => Navigator.of(context).popUntil((_) => count++ >= 2),
+                          //           child: const Text('OK'),
+                          //         ),
+                          //       ],
+                          //     ),
+                          //   );
+                          // };
                           showDialog<String>(
                             context: context,
                             builder: (BuildContext context) => AlertDialog(
