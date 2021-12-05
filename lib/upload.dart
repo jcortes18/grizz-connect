@@ -1,9 +1,15 @@
+import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-//import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:grizz_connect/main.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/services.dart';
+import 'package:path/path.dart';
+import 'package:grizz_connect/firebase_api.dart';
+
 import 'package:grizz_connect/marketplace_main.dart';
 
 
@@ -18,6 +24,8 @@ class _UploadPageState extends State<UploadItem>{
   final TextEditingController _priceController = new TextEditingController();
   final TextEditingController _descriptionController = new TextEditingController();
   final TextEditingController _categoryController = new TextEditingController();
+  final TextEditingController _imageURLController = new TextEditingController();
+  final TextEditingController _imageName = new TextEditingController();
 
   @override
   void dispose() {
@@ -25,11 +33,19 @@ class _UploadPageState extends State<UploadItem>{
     _itemNameController.dispose();
     _priceController.dispose();
     _descriptionController.dispose();
+    // _imageURLController.dispose();
+    // _imageName.dispose();
     super.dispose();
   }
 
   String dropdownValue = '', error = '';
   int count = 0;
+
+  UploadTask? task;
+  File? file;
+  String imageName = "";
+
+  bool viewURL = false;
 
   @override
   Widget build(BuildContext context) {
@@ -39,18 +55,74 @@ class _UploadPageState extends State<UploadItem>{
 
     CollectionReference items = FirebaseFirestore.instance.collection('Items');
 
+    Future selectFile() async {
+      final result = await FilePicker.platform.pickFiles(allowMultiple: false);
+      if (result == null) return;
+
+      final path = result.files.single.path!;
+      imageName =  result.files.single.name;
+
+      setState(() => file = File(path));
+      print("file is ..");
+      print(file);
+      return imageName.toString();
+    }
+
+    // Future uploadFile() async {
+    //   if (file == null) return;
+    //
+    //   final fileName = basename(file!.path);
+    //   print(fileName);
+    //   final destination = 'items/$fileName';
+    //   print(destination);
+    //
+    //   task = FirebaseApi.uploadFile(destination, file!);
+    //   setState(() {});
+    //
+    //   if (task == null) return;
+    //
+    //   final snapshot = await task!.whenComplete(() {});
+    //   final url = await snapshot.ref.getDownloadURL();
+    //   setState(() {
+    //     _imageURLController.text = url.toString();
+    //   });
+    //   print('Download-Link:');
+    //   print(_imageURLController.text);
+    // }
+
     Future<void> addItems() async {
+
+      if (file == null) return;
+
+      final fileName = basename(file!.path);
+      print(fileName);
+      final destination = 'items/$fileName';
+      print(destination);
+
+      task = FirebaseApi.uploadFile(destination, file!);
+      setState(() {});
+
+      if (task == null) return;
+      final snapshot = await task!.whenComplete(() {});
+      final url = await snapshot.ref.getDownloadURL();
+
+      _imageURLController.text = url.toString();
+      print('Download-Link:');
+      print(_imageURLController.text);
 
       return items.add({
         'ItemName': _itemNameController.text,
         'Description': _descriptionController.text,
         'Price': _priceController.text,
         'Category': _categoryController.text,
-        'User': userid})
+        'imageURL': _imageURLController.text,
+        'User': userid,
+        })
           .then((value) => print("Item Added"))
           .catchError((error) => print("Failed to add: $error"));
-
     }
+
+    final fileName = file != null ? basename(file!.path) : 'No File Selected';
 
     return Scaffold(
       appBar: AppBar(
@@ -73,13 +145,16 @@ class _UploadPageState extends State<UploadItem>{
             child:
             Column(
               children: [
+                // item name
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   child: TextFormField(
                     controller: _itemNameController,
+                    keyboardType: TextInputType.text,
+                    textCapitalization: TextCapitalization.sentences,
                     // onChanged: (value){
                     //   setState(() {
-                    //     itemName = value;
+                    //     itemName = value.t;
                     //   });
                     // },
                     decoration: const InputDecoration(
@@ -92,10 +167,13 @@ class _UploadPageState extends State<UploadItem>{
                     ),
                   ),
                 ),
+                // price
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   child: TextFormField(
                     controller: _priceController,
+                     keyboardType: TextInputType.number,
+                      inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly],
                     // onChanged: (value){
                     //   setState(() {
                     //      //price = value as double;
@@ -107,10 +185,11 @@ class _UploadPageState extends State<UploadItem>{
                         borderSide: BorderSide(color: Colors.amber),
                       ),
                       border: OutlineInputBorder(),
-                      labelText: 'Price',
+                      labelText: 'Price (Must be in Numbers)',
                     ),
                   ),
                 ),
+                // description
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   child: TextFormField(
@@ -129,6 +208,7 @@ class _UploadPageState extends State<UploadItem>{
                     ),
                   ),
                 ),
+                // category
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   child: Column(
@@ -162,6 +242,7 @@ class _UploadPageState extends State<UploadItem>{
                     ],
                   ),
                 ),
+                // picture
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 16),
 
@@ -174,19 +255,29 @@ class _UploadPageState extends State<UploadItem>{
                         child: const Text('Add'),
                         style: OutlinedButton.styleFrom(
                           primary: Colors.black,
-                          //backgroundColor: Colors.amber,
                           shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
                           side: const BorderSide(color: Colors.amber),
                         ),
-                        // ***** ADD IMAGES *****
-                        onPressed: () {
-                          // setState(() {
-                          //
-                          // });
-                        },
-                      ),
+                        onPressed: () async {
+                          var name = await selectFile();
+                          print("image name is ..");
+                          print(name);
+                          _imageName.text = name;
+
+                        }),
                     ],
-                  ),),
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(''+_imageName.text+'',
+                        style: const TextStyle(
+                            color: Colors.black, fontSize: 15.0,
+                            fontWeight: FontWeight.w700)),
+                  ],
+                ),
+                // Enter Button
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
                   child: Center(
@@ -201,10 +292,8 @@ class _UploadPageState extends State<UploadItem>{
                         ),
                       ),
                       onPressed: () {
-
-                        if (_itemNameController.text.isEmpty || _descriptionController.text.isEmpty || _priceController.text.isEmpty || dropdownValue.isEmpty) {
+                        if (_itemNameController.text.isEmpty || _descriptionController.text.isEmpty || _priceController.text.isEmpty || dropdownValue.isEmpty || _imageName.text.isEmpty) {
                           setState(() => error = ' All fields required ');
-
                         }
                         else{
                           _categoryController.text = dropdownValue;
@@ -221,13 +310,12 @@ class _UploadPageState extends State<UploadItem>{
                               ],
                             ),
                           );
-
                         }
                       },
-
                     ),
                   ),
                 ),
+                // Error text
                 Text(''+error+'',
                     style: const TextStyle(
                         color: Colors.red, fontSize: 25.0, backgroundColor: Colors.white,
@@ -239,7 +327,11 @@ class _UploadPageState extends State<UploadItem>{
         ],
       ),
     );
+
+
   }
+
+
 
 
 }

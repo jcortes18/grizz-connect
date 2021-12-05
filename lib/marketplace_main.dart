@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:grizz_connect/upload.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_scroll_to_top/flutter_scroll_to_top.dart';
 
 import 'item.dart';
 
@@ -16,22 +17,33 @@ class _MarketplaceState extends State<MarketplaceTab> {
   TextEditingController _searchController = TextEditingController();
   TextEditingController _filterController = TextEditingController();
 
+  bool _showBackToTopButton = false;
+  ScrollController _scrollController = ScrollController();
+
   late Future resultsLoaded;
   List _allResults = [];
   List _resultsList = [];
-  int selectedPage = 0;
 
   @override
   void initState() {
     super.initState();
-    //items = FirebaseFirestore.instance.collection("Items").snapshots();
     _searchController.addListener(_onSearchChanged);
+    _scrollController.addListener(() {
+        setState(() {
+          if (_scrollController.offset >= 400) {
+            _showBackToTopButton = true; // show the back-to-top button
+          } else {
+            _showBackToTopButton = false; // hide the back-to-top button
+          }
+        });
+      });
   }
 
   @override
   void dispose() {
     _searchController.removeListener(_onSearchChanged);
     _searchController.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -96,9 +108,34 @@ class _MarketplaceState extends State<MarketplaceTab> {
     setState(() {
       _allResults = data.docs;
     });
+    print(_allResults);
     searchResultsList();
     return "complete";
   }
+
+  void _scrollToTop() {
+    _scrollController.animateTo(0,
+        duration: Duration(milliseconds: 400), curve: Curves.linear);
+  }
+
+  // getItemsStreamSnapshots() async {
+  //   final FirebaseAuth _auth = FirebaseAuth.instance;
+  //   final user = _auth.currentUser;
+  //   final userid = user!.uid.toString();
+  //
+  //   var collection = FirebaseFirestore.instance.collection('Items');
+  //   collection.snapshots().listen((querySnapshot) {
+  //     print(querySnapshot.docs);
+  //      setState(() {
+  //            _allResults = querySnapshot.docs;
+  //          });
+  //      print("hello");
+  //     print(_allResults);
+  //   });
+  //
+  //   searchResultsList();
+  //   return "complete";
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -106,7 +143,7 @@ class _MarketplaceState extends State<MarketplaceTab> {
 
     return Scaffold(
       extendBodyBehindAppBar: true,
-      //backgroundColor: Colors.white30,
+      backgroundColor: Colors.grey,
       appBar: AppBar(
         elevation: 0.0,
         backgroundColor: Colors.transparent,
@@ -139,11 +176,10 @@ class _MarketplaceState extends State<MarketplaceTab> {
 
       ),
       body: Stack(fit: StackFit.expand, children: [
-        //buildFloatingSearchBar(),
         SingleChildScrollView(
+          controller: _scrollController,
           scrollDirection: Axis.vertical,
           physics: AlwaysScrollableScrollPhysics(),
-          //padding: const EdgeInsets.only(top: 140, right:20, left: 20),
           padding: const EdgeInsets.only(top: 140, right:20, left: 20),
           child: //<Widget>[
           Column(
@@ -169,30 +205,30 @@ class _MarketplaceState extends State<MarketplaceTab> {
                   scrollDirection: Axis.horizontal,
                   child: Row(
                     children: [
+                      Container(
+                        child: Column(children: [
+                          TextButton(
+                              onPressed: () {
+                                setState(() {
+                                  _filterController.text = 'Books';
+                                  filterResultsList();
+                                });
+                              },
+                              child: const Icon(
+                                Icons.book,
+                                color: Colors.amber,
+                                size: 100,
+                              )
+                          ),
+                          const Text('Books',
+                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal, color: Colors.black),
+                          )
+                        ]
+                        ),
+                      ),
                       Column(children: [
                         TextButton(
                             onPressed: () {
-                              // setState(() {
-                              //   items = FirebaseFirestore.instance.collection("Items").where("Category", isEqualTo: "Books").snapshots();
-                              // });
-                              setState(() {
-                                _filterController.text = 'Books';
-                                filterResultsList();
-                              });
-                            },
-                            child: const Icon(
-                              Icons.book,
-                              color: Colors.amber,
-                              size: 100,
-                            )),
-                        const Text('Books')
-                      ]),
-                      Column(children: [
-                        TextButton(
-                            onPressed: () {
-                              // setState(() {
-                              //   items = FirebaseFirestore.instance.collection("Items").where("Category", isEqualTo: "Furniture").snapshots();
-                              // });
                               setState(() {
                                 _filterController.text = 'Furniture';
                                 filterResultsList();
@@ -203,14 +239,12 @@ class _MarketplaceState extends State<MarketplaceTab> {
                               color: Colors.amber,
                               size: 100,
                             )),
-                        const Text('Furniture')
+                        const Text('Furniture',
+                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal, color: Colors.black),)
                       ]),
                       Column(children: [
                         TextButton(
                             onPressed: () {
-                              // setState(() {
-                              //   items = FirebaseFirestore.instance.collection("Items").where("Category", isEqualTo: "Electronics").snapshots();
-                              // });
                               setState(() {
                                 _filterController.text = 'Electronics';
                                 filterResultsList();
@@ -221,14 +255,12 @@ class _MarketplaceState extends State<MarketplaceTab> {
                               color: Colors.amber,
                               size: 100,
                             )),
-                        const Text('Electronics')
+                        const Text('Electronics',
+                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal, color: Colors.black),)
                       ]),
                       Column(children: [
                         TextButton(
                             onPressed: () {
-                              // setState(() {
-                              //   items = FirebaseFirestore.instance.collection("Items").where("Category", isEqualTo: "Lab Kits").snapshots();
-                              // });
                               setState(() {
                                 _filterController.text = 'Lab Kits';
                                 filterResultsList();
@@ -239,14 +271,12 @@ class _MarketplaceState extends State<MarketplaceTab> {
                               color: Colors.amber,
                               size: 100,
                             )),
-                        const Text('Lab Kits')
+                        const Text('Lab Kits',
+                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal, color: Colors.black),)
                       ]),
                       Column(children: [
                         TextButton(
                             onPressed: () {
-                              // setState(() {
-                              //   items = FirebaseFirestore.instance.collection("Items").where("Category", isEqualTo: "Supplies").snapshots();
-                              // });
                               setState(() {
                                 _filterController.text = 'Supplies';
                                 filterResultsList();
@@ -257,49 +287,77 @@ class _MarketplaceState extends State<MarketplaceTab> {
                               color: Colors.amber,
                               size: 100,
                             )),
-                        const Text('Supplies')
+                        const Text('Supplies',
+                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal, color: Colors.black),)
                       ]),
-                      Column(children: [
-                        TextButton(
-                            onPressed: () {
-                              setState(() {
-                                _filterController.text = 'Favorites';
-                                filterResultsList();
-                              });
-                            },
-                            child: const Icon(
-                              Icons.favorite,
-                              color: Colors.amber,
-                              size: 100,
-                            )),
-                        const Text('Favorites')
-                      ]),
+                      // Column(children: [
+                      //   TextButton(
+                      //       onPressed: () {
+                      //         setState(() {
+                      //           _filterController.text = 'Favorites';
+                      //           filterResultsList();
+                      //         });
+                      //       },
+                      //       child: const Icon(
+                      //         Icons.favorite,
+                      //         color: Colors.amber,
+                      //         size: 100,
+                      //       )),
+                      //   const Text('Favorites',
+                      //     style: TextStyle(fontSize: 16, fontWeight: FontWeight.normal, color: Colors.black),)
+                      // ]),
                     ],
                   ),
                 ),
 
-                //Clear Filter button
+                //Clear Filter and refresh buttons
                 Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.only(top: 20.0, left: 3.5),
-                        child: OutlinedButton(
-                          child: const Text('Clear selection'),
-                          style: OutlinedButton.styleFrom(
-                            primary: Colors.black,
-                            //backgroundColor: Colors.amber,
-                            shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
-                            side: const BorderSide(color: Colors.amber),
+                      Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(top: 20.0, left: 3.5),
+                            child: ElevatedButton(
+                              child: const Text('Clear selection'),
+                              style: OutlinedButton.styleFrom(
+                                primary: Colors.black,
+                                backgroundColor: Colors.amber,
+                                shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
+                                side: const BorderSide(color: Colors.amber),
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  _searchController.clear();
+                                  _filterController.clear();
+                                  filterResultsList();
+                                  //getItemsStreamSnapshots();
+                                });
+                              },
+                            ),
                           ),
-                          onPressed: () {
-                            setState(() {
-                              _searchController.clear();
-                              _filterController.clear();
-                              filterResultsList();
-                            });
-                          },
-                        ),
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(top: 20.0, left: 3.5),
+                            child: ElevatedButton(
+                              child: const Text('Refresh'),
+                              style: OutlinedButton.styleFrom(
+                                primary: Colors.black,
+                                backgroundColor: Colors.amber,
+                                shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
+                                side: const BorderSide(color: Colors.amber),
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  getItemsStreamSnapshots();
+                                });
+                              },
+                            ),
+                          ),
+                        ],
                       ),
                     ]
                 ),
@@ -324,23 +382,57 @@ class _MarketplaceState extends State<MarketplaceTab> {
 
         ),
 
+        // Scroll to Top Button
+        Padding(
+          padding: const EdgeInsets.only(bottom: 15, right: 8.0),
+          child: Align(
+            alignment: Alignment.bottomCenter,
+            child: SizedBox(
+              width: 75.0,
+              height: 75.0,
+              child: FloatingActionButton(
+                onPressed: () {
+                  Navigator.push(
+                      context, MaterialPageRoute(builder: (context) => UploadItem())
+                  );
+                },
+                child: const Icon(Icons.add, color: Colors.black,),
+                backgroundColor: Colors.amber,
+                elevation: 10.0,
+              ),
+            ),
+          ),
+        ),
       ]),
 
       // Floating '+' button
-      floatingActionButton: SizedBox(
-        width: 75.0,
-        height: 75.0,
-        child: FloatingActionButton(
-          onPressed: () {
-            Navigator.push(
-                context, MaterialPageRoute(builder: (context) => UploadItem()));
-          },
-          child: const Icon(Icons.add, color: Colors.black,),
-          backgroundColor: Colors.amber,
-          elevation: 10.0,
-        ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: _showBackToTopButton == false
+          ? null
+          : FloatingActionButton(
+              onPressed: _scrollToTop,
+              child: const Icon(Icons.arrow_circle_up),
+              backgroundColor: Colors.black,
+              elevation: 10.0,
+            ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+
+      // Original Floating '+' button
+      // floatingActionButton: SizedBox(
+      //   width: 75.0,
+      //   height: 75.0,
+      //   child: FloatingActionButton(
+      //     onPressed: () {
+      //       Navigator.push(
+      //           context, MaterialPageRoute(builder: (context) => UploadItem())
+      //       );
+      //     },
+      //     child: const Icon(Icons.add, color: Colors.black,),
+      //     backgroundColor: Colors.amber,
+      //     elevation: 10.0,
+      //   ),
+      // ),
+      // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+
     );
   }
   Widget buildCard(BuildContext context, DocumentSnapshot document){
@@ -383,16 +475,13 @@ class _MarketplaceState extends State<MarketplaceTab> {
                     ),
                     // BUY button
                     Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Container(
-                          margin: const EdgeInsets.only(top: 15),
-                          child: TextButton(
-                            child: const Text('VIEW'),
-                            onPressed: () {
-                              // handled by Inkwell onTap()
-                            },
-                          ),
+                          margin: const EdgeInsets.only(top: 28, right: 15),
+                          child:  const Text('VIEW',
+                            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.blue),),
                         ),
                         //const SizedBox(width: 4),
                       ],
