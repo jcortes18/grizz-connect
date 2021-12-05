@@ -44,7 +44,9 @@ https://www.geeksforgeeks.org/
 
 https://youtu.be/AS183vv0xxU
 Flutter getting image from gallery or camera using image picker| Flutter 02 - YouTube
-dart - Flutter - remove a firebase document onTap() - Stack Overflow
+dart - Flutter - remove a firebase document onTap() 
+
+- Stack Overflow
  https://github.com/davefaliskie/travel_treasury/tree/episode_55
  
 https://medium.com/swlh/uploading-images-to-cloud-storage-using-flutter-130ac41741b2
