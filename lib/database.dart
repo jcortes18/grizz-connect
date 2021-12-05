@@ -9,14 +9,31 @@ class DatabaseService {
   final CollectionReference data = FirebaseFirestore.instance.collection('data');
   final CollectionReference comments = FirebaseFirestore.instance.collection('comments');
 
-  Future updateUserData(String displayName, String major, String standing) async {
+  Future updateUserData(String displayName, String major, String standing, String url) async {
     return await data.doc(uid).set({
       'displayName': displayName,
       'major': major,
       'standing': standing,
-
+      'imageUrl': url,
     });
   }
+
+  Stream<QuerySnapshot> get userData {
+      return data.snapshots();
+  }
+/*  final CollectionReference pics = FirebaseFirestore.instance.collection('images');
+
+  Future updateUserpics(String imageUrl, String userId) async {
+    return await pics.doc(uid).set({
+      'imageUrl': imageUrl,
+      'userId': userId,
+    });
+  }
+  Stream<QuerySnapshot> get userpics {
+    return pics.snapshots();
+  }
+
+ */ //ignore
 
   Future updateComments(String comment, name, email) async {
     final snapShot = await FirebaseFirestore.instance
@@ -41,9 +58,5 @@ class DatabaseService {
         'email' : email,
       });
     }
-  }
-
-  Stream<QuerySnapshot> get userData {
-    return data.snapshots();
   }
 }
