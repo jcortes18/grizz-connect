@@ -10,6 +10,7 @@ class MyStart extends StatefulWidget {
   const MyStart({Key? key}) : super(key: key);
 
 
+
   @override
   _MyStartState createState() => _MyStartState();
 
@@ -18,7 +19,11 @@ class MyStart extends StatefulWidget {
 class _MyStartState extends State<MyStart> {
 
   final FirebaseAuth auth = FirebaseAuth.instance;
-
+  Future signOut() async {
+    try {
+      return await auth.signOut();
+  }catch(e){}
+  }
   // text field state
   String email = '';
   String password = '';
@@ -30,43 +35,10 @@ class _MyStartState extends State<MyStart> {
       //startstream
       value: DatabaseService(uid: '').userData,
       initialData: null,
-
-
       child: Scaffold(
-
         backgroundColor: Colors.brown[100],
-        appBar: AppBar(
-          backgroundColor: Colors.amberAccent[400],
-
-          actions: <Widget>[
-            TextButton.icon(
-              icon: const Icon(Icons.person,
-                color: Colors.black,
-                size: 32,
-              ),
-
-              label: const Text('Logout',
-                style: TextStyle(color: Colors.black, fontSize: 20),
-
-              ),
-
-              onPressed: () => Navigator.pushNamed(context, 'login'),
-            ),
-            IconButton(
-              icon: const Icon(
-                Icons.home,
-                color: Colors.black,
-              ),
-              onPressed: () {
-                Navigator.pushNamed(context, 'welcome');
-              },
-            ),
-          ],
-        ),
-
         body:
         profileInfo()
-
       ),
     );
   }
