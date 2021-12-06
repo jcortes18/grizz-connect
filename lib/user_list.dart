@@ -2,8 +2,10 @@ import 'dart:io';
 import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:grizz_connect/database.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
@@ -14,50 +16,82 @@ class profileInfo extends StatefulWidget {
 }
 
 class _profileInfoState extends State<profileInfo> {
-  File? imageFile;
+  String id='';
   double dimention = 200;
-
-  void _getFromGallery() async{
-    XFile? pickedFile = await ImagePicker().pickImage(
-      source: ImageSource.gallery,
-      maxHeight: 150,
-      maxWidth: 150,
-    );
-    setState(() {
-      imageFile = File(pickedFile!.path);
-    });
-  }
+  File? file;
+  String url = '';
+  String urrl = '';
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   @override
   Widget build(BuildContext context) {
-
-    final FirebaseAuth _auth = FirebaseAuth.instance;
     final user = _auth.currentUser;
     final userid = user!.uid.toString();
-    final userEmail = user.email.toString();
+
+    //final userEmail = user.email.toString();
     var userName = '';
     var major = '';
     var standing = '';
+    var urrl = '';
+    /*uploadFile() async{
+      var imageFile = FirebaseStorage.instance.ref().child("path").child("/.jpg");
+      UploadTask task = imageFile.putFile(file!);
+      TaskSnapshot snapshot = await task;
+      url = await snapshot.ref.getDownloadURL();
+      //await DatabaseService(uid: user!.uid).updateUserData(url);
+
+      await FirebaseFirestore.instance.collection("data").doc().set({
+        "imageUrl":url,
+      });
+      print(url);
+    }*/
+    void _getFromGallery() async{
+      XFile? pickedFile = await ImagePicker().pickImage(
+        source: ImageSource.gallery,
+        maxHeight: 150,
+        maxWidth: 150,
+      );
+      setState(() async {
+        file = File(pickedFile!.path);
+        //uploadFile();
+        var imageFile = FirebaseStorage.instance.ref().child(userName).child("/.jpg");
+        UploadTask task = imageFile.putFile(file!);
+        TaskSnapshot snapshot = await task;
+        url = await snapshot.ref.getDownloadURL();
+        await DatabaseService(uid: userid).updateUserData(userName, major, standing, url);
+        //or user user.uid for userid
+        //print(userid);
+      });
+    }
+    //print('userid is: '+user.uid);
     //print('user id is: '+userid);
-    //print('user email is: '+ userEmail);
-    //print('display name is: '+ userName.toString());
-
+    //final userpics = FirebaseFirestore.instance.collection("images").id.toString();// snapshots().toList().;
+    //print(userpics);
+    //userpics.toList();
+    //print('list is: '+userpics.toList().toString());
+    //print('returned pic is'+userpics.first.toString());
+    //print(urrl);
+    id = user.uid;
     final userdata = Provider.of<QuerySnapshot>(context);
-
     List<String> records = [];
-
     for (var doc in userdata.docs) {
-      if(doc.id == userid) {
+      if(doc.id == userid)
+      {
         records = [doc.get('displayName'),
                    doc.get('major'),
-                   doc.get('standing')];
+                   doc.get('standing'),
+                   doc.get('imageUrl'),
+    ];
+        user.updateDisplayName(doc.get('displayName'));
         userName = records[0];
         major = records[1];
         standing = records[2];
-
+        urrl = records[3];
         //print(doc.data()); //get all data as a set
       }
     }
+    //print(urrl.toString());
+
     //for(int i = 0; i<records.length; i++) {
     //  print(records[i]);
     //}
@@ -74,7 +108,35 @@ class _profileInfoState extends State<profileInfo> {
       ),
         child: Scaffold(
             backgroundColor: Colors.black12,
+            appBar: AppBar(
+              backgroundColor: Colors.amberAccent[400],
 
+              actions: <Widget>[
+                TextButton.icon(
+                    icon: const Icon(Icons.person,
+                      color: Colors.black,
+                      size: 32,
+                    ),
+
+                    label: const Text('Logout',
+                      style: TextStyle(color: Colors.black, fontSize: 20),
+
+                    ),
+
+                    onPressed: (){
+                      Navigator.pushNamed(context, 'login');}
+                ),
+                IconButton(
+                  icon: const Icon(
+                    Icons.home,
+                    color: Colors.black,
+                  ),
+                  onPressed: () {
+                    Navigator.pushNamed(context, 'welcome');
+                  },
+                ),
+              ],
+            ),
       body: Stack(
 
       children: [
@@ -91,9 +153,10 @@ class _profileInfoState extends State<profileInfo> {
                   child: ClipOval(
                       child: SizedBox(
                         width: dimention, height: dimention,
-                        child:(imageFile!=null)?Image.file(File(imageFile!.path),fit: BoxFit.fill)
+                        child: (urrl!="")?Image.network(urrl,fit: BoxFit.fill)//(file!=null)?Image.file(File(file!.path),fit: BoxFit.fill)
                             :
-                        Container(child: Icon(Icons.person_rounded, color: Colors.white, size: MediaQuery.of(context).size.width * .4,),
+                        Container(child:
+                          Icon(Icons.person_rounded, color: Colors.white, size: MediaQuery.of(context).size.width * .4,),
                         ),//camera_enhance_rounded
                       )
                   ),
@@ -160,12 +223,25 @@ class _profileInfoState extends State<profileInfo> {
               style: const TextStyle(color: Colors.amberAccent, fontSize: 32),
             ),
           ),
-/*
-          Container( //cont
-            padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-            decoration: const BoxDecoration(
-              color: Colors.blue,
-            ),
+
+          Center(
+          heightFactor: 2.9,
+          child:
+          RaisedButton(
+            child: const Text("Modify my items",
+              style: TextStyle(fontSize: 25, letterSpacing: 2, color: Colors.black,
+                  fontWeight: FontWeight.w700  ),),
+            onPressed: () {
+              Navigator.pushNamed(context, 'modifylist');
+            },
+            color: Colors.amberAccent,
+            padding: const EdgeInsets.symmetric(horizontal: 29, vertical: 10),
+            elevation: 5,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            )
+          ),
+
+            /*
             child:  Card(
               margin: const EdgeInsets.fromLTRB(20, 6, 20, 0),
               child: ListTile(

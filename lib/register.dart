@@ -1,7 +1,12 @@
+import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:grizz_connect/database.dart';
+import 'package:image_picker/image_picker.dart';
 
 class MyRegister extends StatefulWidget {
   const MyRegister({Key? key}) : super(key: key);
@@ -20,6 +25,36 @@ class _MyRegisterState extends State<MyRegister> {
   String error = '';
   String standing = '';
   String major = '';
+  File? file;
+  String url = '';
+  void _getFromGallery() async{
+    XFile? pickedFile = await ImagePicker().pickImage(
+      source: ImageSource.gallery,
+      maxHeight: 150,
+      maxWidth: 150,
+    );
+    setState(() {
+      file = File(pickedFile!.path);
+      //uploadFile();
+    });
+  }
+  /*
+  uploadFile() async{
+    var imageFile = FirebaseStorage.instance.ref().child("path").child("/.jpg");
+    UploadTask task = imageFile.putFile(file!);
+    TaskSnapshot snapshot = await task;
+    url = await snapshot.ref.getDownloadURL();
+    await FirebaseFirestore.instance.collection("data").doc().set({
+      'displayName': displayName,
+      'major': major,
+      'standing': standing,
+      'imageUrl':url,
+      //"userId":userid
+    });
+    //print(url);
+  }
+
+   */
 
   @override
   Widget build(BuildContext context) {
@@ -253,9 +288,25 @@ class _MyRegisterState extends State<MyRegister> {
                           const SizedBox(
                             height: 29,   //height of signup and button
                           ),
+
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
+                              Container( //cont
+                                child: IconButton(
+                                    iconSize: 0,
+                                    onPressed: (){ //on press
+                                      _getFromGallery();
+                                    },
+                                    padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
+                                    icon: const Icon(
+                                      Icons.add_a_photo,
+                                      size: 42,
+                                      color: Colors.redAccent,
+                                    )
+                                ),
+
+                              ),
                               const Text(
                                 ' Sign Up ',
                                 style: TextStyle(
@@ -272,7 +323,15 @@ class _MyRegisterState extends State<MyRegister> {
                                     color: const Color.fromRGBO(254, 215, 102, 2),
                                     onPressed: () async {
                                       setState(() => error = '');
-
+                                      if(file!=null ) {
+                                        var imageFile = FirebaseStorage.instance
+                                            .ref().child("path").child("/.jpg");
+                                        UploadTask task = imageFile.putFile(
+                                            file!);
+                                        TaskSnapshot snapshot = await task;
+                                        url =
+                                        await snapshot.ref.getDownloadURL();
+                                      }
                                       if(displayName.isEmpty || email.isEmpty || pass.isEmpty || standing.isEmpty || major.isEmpty) {
                                         setState(() => error = ' All fields required ');
                                       }
@@ -286,8 +345,11 @@ class _MyRegisterState extends State<MyRegister> {
                                           UserCredential result = await _auth.createUserWithEmailAndPassword(
                                               email: email, password: pass);
                                           User? user = result.user;
-                                          await DatabaseService(uid: user!.uid).updateUserData(displayName, major, standing);
-                                          Navigator.pushNamed(context, 'start');
+                                             await DatabaseService(
+                                                uid: user!.uid).updateUserData(
+                                                displayName, major, standing,
+                                                url);
+                                          Navigator.pushNamed(context, 'welcome');
                                         } on FirebaseAuthException catch (e) {
                                           if (e.code == 'weak-password') {
                                             setState(() =>

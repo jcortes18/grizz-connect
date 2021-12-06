@@ -1,8 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 import 'database.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_scroll_to_top/flutter_scroll_to_top.dart';
 
 
 class ItemPage extends StatefulWidget {
@@ -17,6 +19,35 @@ class _ItemPageState extends State<ItemPage> {
   final myController = TextEditingController();
   String comment = '';
 
+  bool _showBackToTopButton = false;
+  ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(() {
+      setState(() {
+        if (_scrollController.offset >= 400) {
+          _showBackToTopButton = true; // show the back-to-top button
+        } else {
+          _showBackToTopButton = false; // hide the back-to-top button
+        }
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _scrollToTop() {
+    _scrollController.animateTo(0,
+        duration: Duration(milliseconds: 400), curve: Curves.linear);
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,6 +60,8 @@ class _ItemPageState extends State<ItemPage> {
               'Grizz Connect',
             )),
         body: SingleChildScrollView(
+            controller: _scrollController,
+            scrollDirection: Axis.vertical,
           //padding: const EdgeInsets.all(8.0),
             child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -53,6 +86,54 @@ class _ItemPageState extends State<ItemPage> {
                           textAlign: TextAlign.center,
                           style: const TextStyle(
                               fontWeight: FontWeight.bold)),)),
+
+                  Row(
+                      children: <Widget> [
+                      Expanded(
+                          child: TextButton(
+                            onPressed: () async{
+                                  var url = "https://venmo.com";
+                                  if (await launch(url)) {
+                                       await launch(url);
+                                   } else {
+                                        throw 'Could not launch $url';
+                                      }}, child: Image.asset('Venmo.jpg', height: 60, width: 60),),
+                                ),
+                      Expanded(
+                          child: TextButton(
+                           onPressed: () async{
+                             var url = "https://www.paypal.com/us/home";
+                             if (await launch(url)) {
+                               await launch(url);
+                             } else {
+                               throw 'Could not launch $url';
+                             }}, child: Image.asset('PayPal.png', height: 60, width: 60),),
+                      ),
+                         Expanded(
+                        child: TextButton(
+                              onPressed: () async{
+                                var url = "https://www.zellepay.com";
+                                if (await launch(url)) {
+                                  await launch(url);
+                                } else {
+                                  throw 'Could not launch $url';
+                                }}, child: Image.asset('Zelle.png', height: 60, width: 60),),
+                         ),]),
+
+                  /*FloatingActionButton(child: const CircleAvatar(
+                    radius: 50,
+                    backgroundImage: AssetImage("Venmo.jpg",
+                      ),
+                      ),
+                      onPressed: () async{
+                      var url = "https://venmo.com";
+                      if (await launch(url)) {
+                        await launch(url);
+                      } else {
+                         throw 'Could not launch $url';
+                        }
+                                  }
+                            ),*/
                   TextFormField(validator: (val) {
 
                     if (val!.isNotEmpty) {
@@ -77,8 +158,12 @@ class _ItemPageState extends State<ItemPage> {
                   FloatingActionButton.extended(
                     onPressed: () async { //showDialog(context: context, builder: (context) {
                       //return AlertDialog(content: Text(myController.text),);
+                      final FirebaseAuth _auth = FirebaseAuth.instance;
+                      final user = _auth.currentUser;
+                      final userid = user!.uid.toString();
+
                       await DatabaseService(uid: widget.item.id).updateComments(
-                          comment); myController.clear();
+                          comment, user.displayName.toString(), user.email.toString()); myController.clear();
                     },
                     label: const Text('Add Comment'),
                     icon: const Icon(Icons.add_comment),
@@ -100,18 +185,39 @@ class _ItemPageState extends State<ItemPage> {
                               shrinkWrap: true,
                               children: snapshot.data!.docs.map((doc) {
                                 return Card(child: ListTile(
-                                  title: Text(doc['comment']),),);
+                                  //title: Text(user!.email.toString()),
+                                  title: Text(doc['name'] + "\t-\t" + "(" + doc['email'] + ")"),
+                                  subtitle: Text(doc['comment']),),);
                               }).toList(),
                             );
                           }
                         }
                     ),
                   ),
+                  const Padding(
+                    padding: EdgeInsets.only(bottom: 15, right: 8.0),
+                    child: Align(
+                      alignment: Alignment.bottomCenter,
+                    ),
+                  ),
+
                 ])
-        )
+        ),
+      floatingActionButton: _showBackToTopButton == false
+    ? null
+        : FloatingActionButton(
+    onPressed: _scrollToTop,
+      child: const Icon(Icons.arrow_circle_up),
+      backgroundColor: Colors.black,
+      elevation: 10.0,
+    ),
+    floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
+
   }
 }
+
+
 
 
 
@@ -135,18 +241,14 @@ class _ItemPageState extends State<ItemPage> {
     ],
   ),
 );
-
 // **CODE FOR PICTURES FOR CAROUSEL** //
-
 final List<String> imgList = [
   'https://images.unsplash.com/photo-1519985176271-adb1088fa94c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=a0c8d632e977f94e5d312d9893258f59&auto=format&fit=crop&w=1355&q=80',
   'https://images.unsplash.com/photo-1519985176271-adb1088fa94c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=a0c8d632e977f94e5d312d9893258f59&auto=format&fit=crop&w=1355&q=80',
   'https://images.unsplash.com/photo-1519985176271-adb1088fa94c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=a0c8d632e977f94e5d312d9893258f59&auto=format&fit=crop&w=1355&q=80',
   'https://images.unsplash.com/photo-1519985176271-adb1088fa94c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=a0c8d632e977f94e5d312d9893258f59&auto=format&fit=crop&w=1355&q=80'
 ];
-
 // **CODE FOR CAROUSEL** //
-
 Widget carousel(context){
   return SizedBox(
       width: MediaQuery.of(context).size.width,
