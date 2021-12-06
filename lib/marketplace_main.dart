@@ -420,6 +420,7 @@ class _MarketplaceState extends State<MarketplaceTab> {
                 child: const Icon(Icons.add, color: Colors.black,),
                 backgroundColor: Colors.amber,
                 elevation: 10.0,
+                heroTag: null,
               ),
             ),
           ),
@@ -434,6 +435,7 @@ class _MarketplaceState extends State<MarketplaceTab> {
               child: const Icon(Icons.arrow_circle_up),
               backgroundColor: Colors.black,
               elevation: 10.0,
+              heroTag: null,
             ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
 
