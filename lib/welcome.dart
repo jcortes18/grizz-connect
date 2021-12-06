@@ -24,7 +24,7 @@ class _MyWelcomeState extends State<MyWelcome> {
       appBar: AppBar(
         backgroundColor: Colors.amberAccent,
         elevation: 0,
-        title: const Center( child: Text('          Home',
+        title: const Center( child: Text('Home',
         style: TextStyle(fontSize: 25,fontWeight: FontWeight.w900),
         ),),
 

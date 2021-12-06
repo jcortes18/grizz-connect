@@ -28,14 +28,14 @@ class _MarketplaceState extends State<MarketplaceTab> {
     super.initState();
     _searchController.addListener(_onSearchChanged);
     _scrollController.addListener(() {
-        setState(() {
-          if (_scrollController.offset >= 400) {
-            _showBackToTopButton = true;
-          } else {
-            _showBackToTopButton = false;
-          }
-        });
+      setState(() {
+        if (_scrollController.offset >= 400) {
+          _showBackToTopButton = true;
+        } else {
+          _showBackToTopButton = false;
+        }
       });
+    });
   }
 
   @override
@@ -431,12 +431,12 @@ class _MarketplaceState extends State<MarketplaceTab> {
       floatingActionButton: _showBackToTopButton == false
           ? null
           : FloatingActionButton(
-              onPressed: _scrollToTop,
-              child: const Icon(Icons.arrow_circle_up),
-              backgroundColor: Colors.black,
-              elevation: 10.0,
-              heroTag: null,
-            ),
+        onPressed: _scrollToTop,
+        child: const Icon(Icons.arrow_circle_up),
+        backgroundColor: Colors.black,
+        elevation: 10.0,
+        heroTag: null,
+      ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
 
       // Original Floating '+' button
@@ -472,7 +472,7 @@ class _MarketplaceState extends State<MarketplaceTab> {
         child: InkWell(
           onTap: () {
             Navigator.push(
-            context, MaterialPageRoute(builder: (context) => ItemPage(item: document)));
+                context, MaterialPageRoute(builder: (context) => ItemPage(item: document)));
           },
           child: Padding(
             padding: const EdgeInsets.all(0.0),
@@ -520,7 +520,4 @@ class _MarketplaceState extends State<MarketplaceTab> {
 
   }
 }
-
-
-
 

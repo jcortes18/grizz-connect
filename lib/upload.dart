@@ -119,14 +119,14 @@ class _UploadPageState extends State<UploadItem>{
         'Category': _categoryController.text,
         'imageURL': _imageURLController.text,
         'User': userid,
-        })
-          // .then((value) => print(value))
-          // .catchError((error) => print("Failed to add: $error"));
+      })
+      // .then((value) => print(value))
+      // .catchError((error) => print("Failed to add: $error"));
 
           .then((value) => setState(() {
-            _addedItem = true;
-            print("Item Added");
-          }))
+        _addedItem = true;
+        print("Item Added");
+      }))
           .catchError((error) => print("Failed to add: $error"));
     }
 
@@ -176,12 +176,10 @@ class _UploadPageState extends State<UploadItem>{
                   ),
                 ),
                 // price
-               Padding(
+                Padding(
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   child: TextFormField(
                     controller: _priceController,
-                     keyboardType: TextInputType.number,
-                      inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly],
                     // onChanged: (value){
                     //   setState(() {
                     //      //price = value as double;
@@ -193,7 +191,7 @@ class _UploadPageState extends State<UploadItem>{
                         borderSide: BorderSide(color: Colors.amber),
                       ),
                       border: OutlineInputBorder(),
-                      labelText: 'Price (Must be in Numbers)',
+                      labelText: 'Price',
                     ),
                   ),
                 ),
@@ -260,19 +258,19 @@ class _UploadPageState extends State<UploadItem>{
                     children: [
                       const Text('Choose a picture: ', style: TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.w700),),
                       OutlinedButton(
-                        child: const Text('Add'),
-                        style: OutlinedButton.styleFrom(
-                          primary: Colors.black,
-                          shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
-                          side: const BorderSide(color: Colors.amber),
-                        ),
-                        onPressed: () async {
-                          var name = await selectFile();
-                          print("image name is ..");
-                          print(name);
-                          _imageName.text = name;
+                          child: const Text('Add'),
+                          style: OutlinedButton.styleFrom(
+                            primary: Colors.black,
+                            shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10))),
+                            side: const BorderSide(color: Colors.amber),
+                          ),
+                          onPressed: () async {
+                            var name = await selectFile();
+                            print("image name is ..");
+                            print(name);
+                            _imageName.text = name;
 
-                        }),
+                          }),
                     ],
                   ),
                 ),

@@ -325,7 +325,7 @@ class _MyRegisterState extends State<MyRegister> {
                                       setState(() => error = '');
                                       if(file!=null ) {
                                         var imageFile = FirebaseStorage.instance
-                                            .ref().child("path").child("/.jpg");
+                                            .ref().child(displayName).child("/.jpg");
                                         UploadTask task = imageFile.putFile(
                                             file!);
                                         TaskSnapshot snapshot = await task;

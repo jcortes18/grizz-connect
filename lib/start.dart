@@ -1,4 +1,4 @@
-import 'package:firebase_auth/firebase_auth.dart';
+//import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:grizz_connect/user_list.dart';
@@ -18,15 +18,7 @@ class MyStart extends StatefulWidget {
 
 class _MyStartState extends State<MyStart> {
 
-  final FirebaseAuth auth = FirebaseAuth.instance;
-  Future signOut() async {
-    try {
-      return await auth.signOut();
-  }catch(e){}
-  }
-  // text field state
-  String email = '';
-  String password = '';
+  //final FirebaseAuth auth = FirebaseAuth.instance;
 
   @override
   Widget build(BuildContext context) {  //start widget
@@ -38,7 +30,7 @@ class _MyStartState extends State<MyStart> {
       child: Scaffold(
         backgroundColor: Colors.brown[100],
         body:
-        profileInfo()
+        const profileInfo()
       ),
     );
   }

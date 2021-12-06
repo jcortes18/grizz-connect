@@ -63,15 +63,7 @@ class _profileInfoState extends State<profileInfo> {
         //print(userid);
       });
     }
-    //print('userid is: '+user.uid);
-    //print('user id is: '+userid);
-    //final userpics = FirebaseFirestore.instance.collection("images").id.toString();// snapshots().toList().;
-    //print(userpics);
-    //userpics.toList();
-    //print('list is: '+userpics.toList().toString());
-    //print('returned pic is'+userpics.first.toString());
-    //print(urrl);
-    id = user.uid;
+    //id = user.uid;
     final userdata = Provider.of<QuerySnapshot>(context);
     List<String> records = [];
     for (var doc in userdata.docs) {
