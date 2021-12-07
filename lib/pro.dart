@@ -57,7 +57,7 @@ class _MyForm extends State<MyForm> {
                                     text: " click here",
                                     recognizer: TapGestureRecognizer()
                                         ..onTap = () {
-                                            var url = "https://www.oakland.edu/ghc/home";
+                                            var url = "https://www.oakland.edu/ghc";
                                             launch(url);
                                         }),
                             ])),
