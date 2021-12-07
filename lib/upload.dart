@@ -176,10 +176,12 @@ class _UploadPageState extends State<UploadItem>{
                   ),
                 ),
                 // price
-                Padding(
+                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   child: TextFormField(
                     controller: _priceController,
+                     keyboardType: TextInputType.number,
+                      inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly],
                     // onChanged: (value){
                     //   setState(() {
                     //      //price = value as double;
@@ -191,7 +193,7 @@ class _UploadPageState extends State<UploadItem>{
                         borderSide: BorderSide(color: Colors.amber),
                       ),
                       border: OutlineInputBorder(),
-                      labelText: 'Price',
+                      labelText: 'Price (Must be in Numbers)',
                     ),
                   ),
                 ),
