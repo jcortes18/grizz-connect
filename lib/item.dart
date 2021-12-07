@@ -186,6 +186,8 @@ class _ItemPageState extends State<ItemPage> {
                           return Center(child: CircularProgressIndicator(),);
                         } else {
                           return ListView(
+                            physics: ScrollPhysics(),
+                            scrollDirection: Axis.vertical,
                             shrinkWrap: true,
                             children: snapshot.data!.docs.map((doc) {
                               return Card(child: ListTile(
