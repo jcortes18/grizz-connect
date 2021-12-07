@@ -493,7 +493,7 @@ class _MarketplaceState extends State<MarketplaceTab> {
                     Expanded(
                       child: ListTile(
                         title: Text(_item),
-                        subtitle: Text(_price.toString()),
+                        subtitle: Text('\$ ${_price.toString()}'),
                       ),
                     ),
                     // BUY button
