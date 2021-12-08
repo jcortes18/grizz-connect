@@ -1,26 +1,29 @@
 # CSI4999: Grizz Connect 
 
-Contains: Registration, login, marketplace, upload, and firebase connections.
+This project was designed as an Oakland University specific ecommerce application. As a university student we need to buy books and equipment for a reasonable price and the best way is to buy from other students. Our application also incorporates health and safety parameters where it notifies user of potencial help centers across university e.g(GHC). We have designed it with goal of cloud deployment so the backend completely runs in GCP and front end can be integrated in Firebase very quickly.
 
-Please attach pages and dependencies for itempage, health form, profile, and anything else thats missing. 
 
-FYI:
-
-After logging in, the main page shows up from where on tap functionality
-
-## Getting Started
-
+### Contains: 
 Registration
 
-Login
+login
 
-Profile 
+health forms
 
-Marketplace + add hyperlinks to the university selling old system
+marketplace
 
-Covid-19 Form + add hyperlinks to the oakland university GHC + add location API
+upload
 
-Database: Firebase
+item pages
+
+firebase connections
+
+
+### Firestore: 
+
+GrizzConnect has been designed with firestore database.Which is a NOSQL database. The data is collected and stored as document. The data is collected and stored as documents. Data is organized as collections. Our application uses a UID and links all collections from that UID together for filtering and updating queries. Designing the pages to interact with the database and experimenting with different design strategies etc like scroll controller 
+
+
 
 # Works Cited
 
