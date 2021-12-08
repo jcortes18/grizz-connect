@@ -25,7 +25,7 @@ Dart
 
 Android Studio
 
-Friebase
+Firebase
 
 
 ### Firestore: 
