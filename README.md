@@ -6,23 +6,31 @@ This project was designed as an Oakland University specific ecommerce applicatio
 ### Contains: 
 Registration
 
-login
+Login
 
-health forms
+Covid-19 Health forms
 
-marketplace
+Marketplace
 
-upload
+Upload page
 
-item pages
+Item pages
 
-firebase connections
+Firebase connections
+
+### This project is build using: 
+Flutter
+
+Dart
+
+Android Studio
+
+Friebase
 
 
 ### Firestore: 
 
 GrizzConnect has been designed with firestore database.Which is a NOSQL database. The data is collected and stored as document. The data is collected and stored as documents. Data is organized as collections. Our application uses a UID and links all collections from that UID together for filtering and updating queries. Designing the pages to interact with the database and experimenting with different design strategies etc like scroll controller 
-
 
 
 # Works Cited
