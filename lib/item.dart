@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-//import 'package:flutter/src/widgets/framework.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'database.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -56,7 +55,7 @@ class _ItemPageState extends State<ItemPage> {
           backgroundColor: const Color.fromRGBO(47, 46, 46, 1.0),
           centerTitle: true,
           title: const Text(
-            'Grizz Connect'
+              'Grizz Connect'
           )),
       body: SingleChildScrollView(
           controller: _scrollController,
@@ -118,7 +117,7 @@ class _ItemPageState extends State<ItemPage> {
                               throw 'Could not launch $url';
                             }}, child: Image.asset('Zelle.png', height: 60, width: 60),),
                       ),
-                      ]
+                    ]
                 ),
                 const SizedBox(height: 5.0),
                 Text(''+error+'',
@@ -144,7 +143,13 @@ class _ItemPageState extends State<ItemPage> {
                       EdgeInsets.only(left: 15, bottom: 11, top: 11, right: 15),
                       hintText: "Add Comment",
                       suffixIcon: IconButton(
-                        onPressed: myController.clear,
+                        onPressed: () {
+                          var clear = myController.clear;
+                          clear.call();
+                          setState(() {
+                            comment = '';
+                          });
+                        },
                         icon: Icon(Icons.clear),)),
                 ),
                 FloatingActionButton.extended(
