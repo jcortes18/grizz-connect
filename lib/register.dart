@@ -53,7 +53,6 @@ class _MyRegisterState extends State<MyRegister> {
     });
     //print(url);
   }
-
    */
 
   @override
@@ -81,8 +80,8 @@ class _MyRegisterState extends State<MyRegister> {
               icon: const Icon(Icons.person, color: Colors.black, size: 27,),
               label: const Text('Login',
                 style: TextStyle(color: Colors.black, fontSize: 20),
-                ),
-              onPressed: () => Navigator.pushNamed(context, 'login'),
+              ),
+              onPressed: () => Navigator.pushNamed(context, 'profile'),
             ),
           ],
         ),
@@ -345,11 +344,11 @@ class _MyRegisterState extends State<MyRegister> {
                                           UserCredential result = await _auth.createUserWithEmailAndPassword(
                                               email: email, password: pass);
                                           User? user = result.user;
-                                             await DatabaseService(
-                                                uid: user!.uid).updateUserData(
-                                                displayName, major, standing,
-                                                url);
-                                          Navigator.pushNamed(context, 'welcome');
+                                          await DatabaseService(
+                                              uid: user!.uid).updateUserData(
+                                              displayName, major, standing,
+                                              url);
+                                          Navigator.pushNamed(context, 'start');
                                         } on FirebaseAuthException catch (e) {
                                           if (e.code == 'weak-password') {
                                             setState(() =>
@@ -378,40 +377,15 @@ class _MyRegisterState extends State<MyRegister> {
                           ),
 
 
-                          /*
-                          const SizedBox( //return to login
-                            height: 50,
-                          ),
-                          Row(  //return
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              TextButton(
-                                onPressed: () {
-
-                                  Navigator.pushNamed(context, 'login');
-                                },
-                                child: const Text(
-                                  'Already have an account? Login!',
-                                  textAlign: TextAlign.left,
-                                  style: TextStyle(
-                                      decoration: TextDecoration.underline,
-                                      color: Colors.black,
-                                      fontSize: 20),
-                                ),
-                                style: const ButtonStyle(
-                                ),
-                              ),
-                            ],
-                          )
-                          */
 
 
-                              const SizedBox(height: 10.0),
-                              Text(error,
-                                  style: const TextStyle(color: Colors.red, fontSize: 20.0,
-                                    fontWeight: FontWeight.w700,
-                                  )
+
+                          const SizedBox(height: 10.0),
+                          Text(error,
+                              style: const TextStyle(color: Colors.red, fontSize: 20.0,
+                                fontWeight: FontWeight.w700,
                               )
+                          )
                         ],
 
                       ),
