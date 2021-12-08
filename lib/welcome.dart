@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 
 class MyWelcome extends StatefulWidget {
@@ -14,9 +15,28 @@ class _MyWelcomeState extends State<MyWelcome> {
     'Home.png',
     'Person.jpg',
     'Settings.png',
-    'Health.png',
+    'Health.png','property.png','map.png',
   ];
-
+  bool _showBackToTopButton = false;
+  ScrollController _scrollController = ScrollController();
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(() {
+      setState(() {
+        if (_scrollController.offset >= 400) {
+          _showBackToTopButton = true;
+        } else {
+          _showBackToTopButton = false;
+        }
+      });
+    });
+  }
+  @override
+  void _scrollToTop() {
+        _scrollController.animateTo(0,
+        duration: Duration(milliseconds: 400), curve: Curves.linear);
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,6 +47,7 @@ class _MyWelcomeState extends State<MyWelcome> {
         title: const Center( child: Text('Home',
         style: TextStyle(fontSize: 25,fontWeight: FontWeight.w900),
         ),),
+
 
         actions: <Widget>[
           TextButton.icon(
@@ -48,11 +69,11 @@ class _MyWelcomeState extends State<MyWelcome> {
               children: <Widget>[
                 Container(
                   width: double.infinity,
-                  height: 250,
+                  height: 200,
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
                       image: const DecorationImage(
-                          image: AssetImage('Login.jpg'),
+                          image: AssetImage('ou.png'),
                           fit: BoxFit.fitWidth
                       )
                   ),
@@ -70,7 +91,6 @@ class _MyWelcomeState extends State<MyWelcome> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: <Widget>[
-                        const Text("Hello Golden Grizzly", style: TextStyle(color: Colors.yellow, fontSize: 35, fontWeight: FontWeight.bold),),
                         Container(
                           height: 55,
                           margin: EdgeInsets.symmetric(horizontal: 40),
@@ -78,9 +98,9 @@ class _MyWelcomeState extends State<MyWelcome> {
                               borderRadius: BorderRadius.circular(10),
                               color: Colors.white
                           ),
-                          child: Center(child: Text("Select from Menu below", style: TextStyle(color: Colors.grey[900], fontWeight: FontWeight.bold),)),
+                          child: Center(child: Text("Hello Golden Grizzly", style: TextStyle(color: Colors.grey[900], fontWeight: FontWeight.bold),)),
                         ),
-                        SizedBox(height: 30,),
+                        SizedBox(height: 5,),
                       ],
                     ),
                   ),
@@ -89,8 +109,8 @@ class _MyWelcomeState extends State<MyWelcome> {
                 Expanded(
                     child: GridView.count(
                       crossAxisCount: 2,
-                      crossAxisSpacing: 10,
-                      mainAxisSpacing: 10,
+                      crossAxisSpacing: 20,
+                      mainAxisSpacing: 20,
                       shrinkWrap: true,
                       children: <Widget>[
 
@@ -103,18 +123,6 @@ class _MyWelcomeState extends State<MyWelcome> {
 
                                     fit: BoxFit.contain
                                 )
-                            ),
-                            child: Transform.translate(
-                              offset: Offset(50, -50),
-                              child: Container(
-                                margin: EdgeInsets.symmetric(horizontal: 65, vertical: 63),
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: Colors.white
-                                ),
-                                child: Icon(Icons.bookmark, size: 29,),
-                              ),
-
                             ),
                           ),
                           onTap:(){
@@ -132,18 +140,7 @@ class _MyWelcomeState extends State<MyWelcome> {
                                     fit: BoxFit.fitHeight
                                 )
                             ),
-                            child: Transform.translate(
-                              offset: Offset(50, -50),
-                              child: Container(
-                                margin: EdgeInsets.symmetric(horizontal: 65, vertical: 63),
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: Colors.white
-                                ),
-                                child: Icon(Icons.bookmark, size: 29,),
-                              ),
 
-                            ),
                           ),
                           onTap:(){
                             Navigator.pushNamed(context, 'pro');
@@ -161,18 +158,7 @@ class _MyWelcomeState extends State<MyWelcome> {
                                     fit: BoxFit.cover
                                 )
                             ),
-                            child: Transform.translate(
-                              offset: Offset(50, -50),
-                              child: Container(
-                                margin: EdgeInsets.symmetric(horizontal: 65, vertical: 63),
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: Colors.white
-                                ),
-                                child: Icon(Icons.bookmark, size: 29,),
-                              ),
 
-                            ),
                           ),
                           onTap:(){
                             Navigator.pushNamed(context, 'start');
@@ -189,20 +175,53 @@ class _MyWelcomeState extends State<MyWelcome> {
                                     fit: BoxFit.cover
                                 )
                             ),
-                            child: Transform.translate(
-                              offset: Offset(50, -50),
-                              child: Container(
-                                margin: EdgeInsets.symmetric(horizontal: 65, vertical: 63),
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: Colors.white
-                                ),
-                                child: Icon(Icons.bookmark, size: 29,),
-                              ),
 
-                            ),
                           ),
-                          onTap:(){},
+                            onTap:() async{
+                              var url = "https://mysail.oakland.edu/uPortal/f/welcome/p/academic-resources.u17l1n11/max/render.uP?pCp";
+                              if (await launch(url)) {
+                                await launch(url);
+                              } else {
+                                throw 'Could not launch $url';
+                              }}
+                        ),
+                        InkWell(
+                          child: Container(
+                            decoration: BoxDecoration(color: Colors.white,
+                                borderRadius: BorderRadius.circular(20),
+                                image: const DecorationImage(
+                                    image: AssetImage('property.png'),
+                                    fit: BoxFit.cover
+                                )
+                            ),
+
+                          ),
+                          onTap:() async{
+                              var url = "https://oakland.edu/universityservices/property-management/";
+                              if (await launch(url)) {
+                                await launch(url);
+                              } else {
+                                throw 'Could not launch $url';
+                              }}
+                        ),
+                        InkWell(
+                          child: Container(
+                            decoration: BoxDecoration(color: Colors.white,
+                                borderRadius: BorderRadius.circular(20),
+                                image: const DecorationImage(
+                                    image: AssetImage('map.png'),
+                                    fit: BoxFit.cover
+                                )
+                            ),
+
+                          ),
+                            onTap:() async{
+                              var url = "https://map.concept3d.com/?id=566#!ct/0";
+                              if (await launch(url)) {
+                                await launch(url);
+                              } else {
+                                throw 'Could not launch $url';
+                              }}
                         ),
 
                       ],
