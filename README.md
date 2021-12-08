@@ -63,3 +63,6 @@ https://www.youtube.com/playlist?list=PL4cUxeGkcC9j--TKIdkb3ISfRbJeJYQwC
 
 https://www.cdc.gov/coronavirus/2019-ncov/symptoms-testing/coronavirus-self-checker.html?s_cid=ccbot_004#cdc-chat-bot-open
 
+https://gs.statcounter.com/os-market-share/mobile/worldwide?mobile_os_combined-ww-monthly-201910-202010&chartWidth=600
+
+
