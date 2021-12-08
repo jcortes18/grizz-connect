@@ -175,13 +175,14 @@ class _UploadPageState extends State<UploadItem>{
                     ),
                   ),
                 ),
-                // price
-                 Padding(
+               Padding(
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   child: TextFormField(
                     controller: _priceController,
                      keyboardType: TextInputType.number,
-                      inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly],
+                    //  inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly],
+                    inputFormatters: [
+                      FilteringTextInputFormatter(RegExp("[0-9.]"), allow: true),],
                     // onChanged: (value){
                     //   setState(() {
                     //      //price = value as double;
