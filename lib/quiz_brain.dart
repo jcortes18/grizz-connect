@@ -1,3 +1,4 @@
+
 class Question {
   String qText;
   bool qAns;
@@ -36,10 +37,11 @@ class QuizBrain {
   }
 
   bool isFinished() {
-    if (_qNo == _questions.length - 1)
+    if (_qNo == _questions.length - 1) {
       return true;
-    else
+    } else {
       return false;
+    }
   }
 
   void reset() {
